@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace EncodingApi.Internal
+namespace EncodingApi
 {
-    public abstract class ResponseBase : Internal.XmlModelBase
+    public abstract class ResponseBase : Models.XmlModelBase
     {
         private string _message;
         private ICollection<string> _errors;

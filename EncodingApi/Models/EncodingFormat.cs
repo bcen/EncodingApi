@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace EncodingApi
+namespace EncodingApi.Models
 {
-    public class EncodingFormat : Internal.XmlModelBase
+    public class EncodingFormat : XmlModelBase
     {
         public EncodingFormat()
             : this("<format/>")

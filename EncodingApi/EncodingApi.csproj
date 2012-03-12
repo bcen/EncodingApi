@@ -42,11 +42,11 @@
   <ItemGroup>
     <Compile Include="AddMediaResponse.cs" />
     <Compile Include="EncodingWebRequest.cs" />
-    <Compile Include="EncodingApiQuery.cs" />
+    <Compile Include="Models\EncodingApiQuery.cs" />
     <Compile Include="EncodingWebRequestException.cs" />
     <Compile Include="ResponseBase.cs" />
-    <Compile Include="XmlModelBase.cs" />
-    <Compile Include="EncodingFormat.cs" />
+    <Compile Include="Models\XmlModelBase.cs" />
+    <Compile Include="Models\EncodingFormat.cs" />
     <Compile Include="GetMediaListResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

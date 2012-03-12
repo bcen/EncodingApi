@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace EncodingApi
+namespace EncodingApi.Models
 {
     /// <summary>
     /// A more object oriented way to construct a xml query for http://www.encoding.com.
     /// </summary>
-    public class EncodingApiQuery : Internal.XmlModelBase
+    public class EncodingApiQuery : XmlModelBase
     {
         public EncodingApiQuery()
             : this("<query/>")
