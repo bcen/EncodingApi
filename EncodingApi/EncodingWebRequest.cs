@@ -60,8 +60,10 @@ namespace EncodingApi
             var result = SendGetMediaListRequest();
             if (result.Errors.Count > 0)
             {
-                string errorMessage = result.Errors.First();
-                throw new Exception(errorMessage);
+                string message = result.Errors.First();
+                EncodingWebRequestException ex = new EncodingWebRequestException(message);
+                ex.Data.Add("errors", result.Errors);
+                throw ex;
             }
 
             return result.MediaList;

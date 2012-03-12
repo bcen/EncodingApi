@@ -43,6 +43,7 @@
     <Compile Include="AddMediaResponse.cs" />
     <Compile Include="EncodingWebRequest.cs" />
     <Compile Include="EncodingApiQuery.cs" />
+    <Compile Include="EncodingWebRequestException.cs" />
     <Compile Include="ResponseBase.cs" />
     <Compile Include="XmlModelBase.cs" />
     <Compile Include="EncodingFormat.cs" />
