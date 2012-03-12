@@ -81,6 +81,11 @@ namespace EncodingApi
             return new GetMediaListResponse(result);
         }
 
+        public void SendGetMediaListRequestAsync(Action<GetMediaListResponse> callback)
+        {
+            throw new NotImplementedException("Come back later");
+        }
+
         /// <summary>
         /// Internally it sends a GetMediaList request to the server and extract a list
         /// of GetMediaListResponse.Media from the GetMediaListResponse.
@@ -103,7 +108,7 @@ namespace EncodingApi
         private string SendRequest(EncodingApiQuery qry)
         {
             if (UserId == null || UserKey == null)
-                throw new Exception("UserId or UserKey is empty");
+                throw new EncodingWebRequestException("UserId or UserKey is empty");
 
             string xmlResult = "<nothing/>";
             qry.UserId = UserId;
