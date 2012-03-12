@@ -1,26 +1,51 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 using EncodingApi.Models;
 
 namespace EncodingApi
 {
     public class EncodingWebRequest
     {
+        /// <summary>
+        /// The default host URI.
+        /// </summary>
         public static readonly Uri DefaultHost = new Uri("http://manage.encoding.com/");
+
+        /// <summary>
+        /// The host URI to use when SSL is enabled.
+        /// </summary>
         public static readonly Uri DefaultSslHost = new Uri("https://manage.encoding.com/");
+
+        /// <summary>
+        /// Encoding.com's user id.
+        /// </summary>
         public string UserId { get; set; }
+
+        /// <summary>
+        /// Encoding.com's user key.
+        /// </summary>
         public string UserKey { get; set; }
+
         private HttpWebRequest request;
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public EncodingWebRequest()
             : this(null, null)
         {
         }
 
+        /// <summary>
+        /// Initializes the object with user id and user key. Internally it initializes a
+        /// HttpWebRequest object without SSL.
+        /// </summary>
+        /// <param name="uid">The 3 to 5 digits user id.</param>
+        /// <param name="ukey">The user key.</param>
         public EncodingWebRequest(string uid, string ukey)
         {
             UserId = uid;
@@ -28,34 +53,39 @@ namespace EncodingApi
             InitializeHttpWebRequest(false);
         }
 
+        /// <summary>
+        /// Forces to use SSL. It will recreate a new HttpWebRequest object, thus previous settings
+        /// will be lost.
+        /// </summary>
         public void EnableSslConnection()
         {
             InitializeHttpWebRequest(true);
         }
 
+        /// <summary>
+        /// Disables SSL. It will recreate a new HttpWebRequest object, thus previous settings
+        /// will be lost.
+        /// </summary>
         public void DisableSslConnection()
         {
             InitializeHttpWebRequest(false);
         }
 
-        public void SendGetMediaListRequestAsync<T>(Action<T> callback)
-        {
-            // TODO: Send request async.
-        }
-
-        public void SendAddMediaRequest(Uri[] sources)
-        {
-            EncodingApiQuery qry = new EncodingApiQuery();
-            qry.AddMultipleSource(sources);
-            string result = SendRequest(qry);
-        }
-
+        /// <summary>
+        /// Sends a GetMediaList request to the server.
+        /// </summary>
+        /// <returns>An instance of GetMediaListResponse.</returns>
         public GetMediaListResponse SendGetMediaListRequest()
         {
             string result = SendRequest(EncodingApiQuery.CreateGetMediaListQuery());
             return new GetMediaListResponse(result);
         }
 
+        /// <summary>
+        /// Internally it sends a GetMediaList request to the server and extract a list
+        /// of GetMediaListResponse.Media from the GetMediaListResponse.
+        /// </summary>
+        /// <returns>A collection of GetMediaListResponse.Media.</returns>
         public ICollection<GetMediaListResponse.Media> GetMediaList()
         {
             var result = SendGetMediaListRequest();
@@ -69,7 +99,7 @@ namespace EncodingApi
 
             return result.MediaList;
         }
-
+        
         private string SendRequest(EncodingApiQuery qry)
         {
             if (UserId == null || UserKey == null)
@@ -115,6 +145,9 @@ namespace EncodingApi
             }
         }
 
+        /// <summary>
+        /// Gets and sets the time out duration for the web request connection.
+        /// </summary>
         public int Timeout
         {
             get
