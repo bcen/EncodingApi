@@ -30,13 +30,26 @@ namespace EncodingApi
         /// </summary>
         public string UserKey { get; set; }
 
-        private HttpWebRequest request;
+        /// <summary>
+        /// Gets and sets the option to use SSL.
+        /// </summary>
+        public bool UseSsl { get; set; }
+
+        /// <summary>
+        /// Gets and sets the timeout of the connection.
+        /// </summary>
+        public int Timeout { get; set; }
+
+        /// <summary>
+        /// Gets and sets the proxy.
+        /// </summary>
+        public IWebProxy Proxy { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the EncodingWebRequest class.
         /// </summary>
         public EncodingWebRequest()
-            : this(null, null, false)
+            : this(null, null)
         {
         }
 
@@ -47,40 +60,10 @@ namespace EncodingApi
         /// <param name="uid">The 3 to 5 digits user id.</param>
         /// <param name="ukey">The user key.</param>
         public EncodingWebRequest(string uid, string ukey)
-            : this(uid, ukey, false)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the EncodingWebRequest class for the specified user key,
-        /// user id, and with the specified SSL connection option.
-        /// </summary>
-        /// <param name="uid">The 3 to 5 digits user id.</param>
-        /// <param name="ukey">The user key.</param>
-        /// <param name="useSsl">Use SSL connection option.</param>
-        public EncodingWebRequest(string uid, string ukey, bool useSsl)
         {
             UserId = uid;
             UserKey = ukey;
-            InitializeHttpWebRequest(useSsl);
-        }
-
-        /// <summary>
-        /// Forces to use SSL. It will recreate a new HttpWebRequest object, thus previous settings
-        /// will be lost.
-        /// </summary>
-        public void EnableSslConnection()
-        {
-            InitializeHttpWebRequest(true);
-        }
-
-        /// <summary>
-        /// Disables SSL. It will recreate a new HttpWebRequest object, thus previous settings
-        /// will be lost.
-        /// </summary>
-        public void DisableSslConnection()
-        {
-            InitializeHttpWebRequest(false);
+            Timeout = 100000;
         }
 
         /// <summary>
@@ -122,59 +105,45 @@ namespace EncodingApi
             if (UserId == null || UserKey == null)
                 throw new EncodingWebRequestException("UserId or UserKey is empty");
 
-            string xmlResult = "<nothing/>";
-            qry.UserId = UserId;
-            qry.UserKey = UserKey;
-            
-            string content = "xml=" + qry.ToString();
-            qry = null;
+            string xmlResult = "<response><error>Cannot establish a request to the server</error></response>";
+            HttpWebRequest request = CreateWebRequest();
 
             if (request != null)
             {
-                request.ContentLength = content.Length;
+                qry.UserId = UserId;
+                qry.UserKey = UserKey;
 
+                string content = "xml=" + qry.ToString();
+                qry = null;
+
+                request.ContentLength = content.Length;
                 using (Stream stream = request.GetRequestStream())
                 {
                     stream.Write(Encoding.UTF8.GetBytes(content), 0, content.Length);
                 }
 
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                using (StreamReader reader = new StreamReader(request.GetResponse()
+                                                                     .GetResponseStream()))
                 {
-                    using (StreamReader reader = new StreamReader(response.GetResponseStream(),
-                                                                  Encoding.UTF8))
-                    {
-                        xmlResult = reader.ReadToEnd();
-                    }
+                    xmlResult = reader.ReadToEnd();
                 }
             }
 
             return xmlResult;
         }
 
-        private void InitializeHttpWebRequest(bool useSsl)
+        private HttpWebRequest CreateWebRequest()
         {
-            Uri reqUri = useSsl ? DefaultSslHost : DefaultHost;
-            request = WebRequest.Create(reqUri) as HttpWebRequest;
+            Uri host = UseSsl ? DefaultSslHost : DefaultHost;
+            HttpWebRequest request = WebRequest.Create(host) as HttpWebRequest;
             if (request != null)
             {
                 request.Method = "POST";
                 request.ContentType = "application/x-www-form-urlencoded";
+                request.Timeout = Timeout;
+                request.Proxy = Proxy;
             }
-        }
-
-        /// <summary>
-        /// Gets and sets the time out duration for the web request connection.
-        /// </summary>
-        public int Timeout
-        {
-            get
-            {
-                return request.Timeout;
-            }
-            set
-            {
-                request.Timeout = value;
-            }
+            return request;
         }
     }
 }
