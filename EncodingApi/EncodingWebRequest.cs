@@ -33,24 +33,36 @@ namespace EncodingApi
         private HttpWebRequest request;
 
         /// <summary>
-        /// Default constructor.
+        /// Initializes a new instance of the EncodingWebRequest class.
         /// </summary>
         public EncodingWebRequest()
-            : this(null, null)
+            : this(null, null, false)
         {
         }
 
         /// <summary>
-        /// Initializes the object with user id and user key. Internally it initializes a
-        /// HttpWebRequest object without SSL.
+        /// Initializes a new instance of the EncodingWebRequest class for the specified user key
+        /// and user id.
         /// </summary>
         /// <param name="uid">The 3 to 5 digits user id.</param>
         /// <param name="ukey">The user key.</param>
         public EncodingWebRequest(string uid, string ukey)
+            : this(uid, ukey, false)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the EncodingWebRequest class for the specified user key,
+        /// user id, and with the specified SSL connection option.
+        /// </summary>
+        /// <param name="uid">The 3 to 5 digits user id.</param>
+        /// <param name="ukey">The user key.</param>
+        /// <param name="useSsl">Use SSL connection option.</param>
+        public EncodingWebRequest(string uid, string ukey, bool useSsl)
         {
             UserId = uid;
             UserKey = ukey;
-            InitializeHttpWebRequest(false);
+            InitializeHttpWebRequest(useSsl);
         }
 
         /// <summary>
