@@ -1,0 +1,7 @@
+*.suo
+*/bin
+*/obj
+[Tt]est[Rr]esults/
+_UpgradeReport_Files/
+*.user
+Thumbs.db
