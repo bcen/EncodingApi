@@ -40,11 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddMediaResponse.cs" />
     <Compile Include="EncodingWebRequest.cs" />
     <Compile Include="Models\EncodingApiQuery.cs" />
     <Compile Include="EncodingWebRequestException.cs" />
-    <Compile Include="ResponseBase.cs" />
+    <Compile Include="XmlResponse.cs" />
     <Compile Include="Models\XmlModelBase.cs" />
     <Compile Include="Models\EncodingFormat.cs" />
     <Compile Include="GetMediaListResponse.cs" />
