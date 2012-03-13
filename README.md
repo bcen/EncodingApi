@@ -8,9 +8,9 @@ Click [here](http://www.encoding.com/api/category/category/complete_api_document
 
 ## Example
 
-Gets a list of media from the server:
+Gets a list of media:
 
-    EncodingServiceClient client = new EncodingServiceClient(api_id, api_key);
+    EncodingServiceClient client = new EncodingServiceClient("id", "key");
 
     foreach (var m in client.GetMediaList())
     {
@@ -25,3 +25,21 @@ or do it in the raw way:
     {
         Console.WriteLine(m.MediaId);
     }
+
+it also can be done asynchronously:
+
+    client.GetMediaList((mediaList) =>
+    {
+        foreach (var m in mediaList)
+        {
+            Console.WriteLine(m.MediaId);
+        }
+    }, (errors) =>
+    {
+        foreach (var message in errors)
+        {
+            Console.WriteLine(message);
+        }
+    });
+
+    
