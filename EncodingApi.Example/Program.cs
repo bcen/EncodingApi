@@ -10,11 +10,24 @@ namespace EncodingApi.Example
     {
         public static void Main(string[] args)
         {
-            EncodingServiceClient request = new EncodingServiceClient("id", "key");
+            EncodingServiceClient client = new EncodingServiceClient("id", "key");
 
             try
             {
-                var list = request.GetMediaList();
+                var list = client.GetMediaList();
+                foreach (var m in list)
+                {
+                    Console.WriteLine(m.MediaFile.AbsoluteUri);
+                }
+            }
+            catch (EncodingServiceException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            try
+            {
+                var list = client.GetMediaList();
                 foreach (var m in list)
                 {
                     Console.WriteLine(m.MediaFile.AbsoluteUri);
