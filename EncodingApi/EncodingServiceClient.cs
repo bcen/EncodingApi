@@ -76,6 +76,18 @@ namespace EncodingApi
             string result = SendRequest(EncodingQuery.CreateGetMediaListQuery());
             return new GetMediaListResponse(result);
         }
+        
+        /// <summary>
+        /// Sends a GetMediaList request asynchronously.
+        /// </summary>
+        /// <param name="callback">The callback to process the xml result.</param>
+        public void SendGetMediaListRequestAsync(Action<GetMediaListResponse> callback)
+        {
+            SendRequestAsync(EncodingQuery.CreateGetMediaListQuery(), (xmlResult) =>
+            {
+                callback(new GetMediaListResponse(xmlResult));
+            });
+        }
 
         /// <summary>
         /// Internally it sends a GetMediaList request to the server and extract a list
@@ -95,6 +107,16 @@ namespace EncodingApi
 
             return result.MediaList;
         }
+
+        public void GetMediaListAsync(Action<ICollection<GetMediaListResponse.Media>> callback,
+                                      Action<ICollection<string>> errors)
+        {
+            SendGetMediaListRequestAsync((response) =>
+            {
+                callback(response.MediaList);
+                errors(response.Errors);
+            });
+        }
         
         /// <summary>
         /// Sends a HttpWebRequest with EncodingQuery to Encoding.com and returns a 
@@ -110,7 +132,7 @@ namespace EncodingApi
             // Default xmlResult if nothing is read from the response.
             string xmlResult = "<response><error>Cannot establish a request to the server</error></response>";
             
-            HttpWebRequest request = CreateRequest();
+            HttpWebRequest request = CreateRequest(UseSslConnection ? DefaultSslHost : DefaultHost);
             if (request != null)
             {
                 query.UserId = UserId;
@@ -165,12 +187,59 @@ namespace EncodingApi
         }
 
         /// <summary>
+        /// Sends request asynchronously.
+        /// </summary>
+        /// <param name="query">The query for encoding service.</param>
+        /// <param name="callback">The callback for xml result.</param>
+        protected virtual void SendRequestAsync(EncodingQuery query, Action<string> callback)
+        {
+            if (UserId == null || UserKey == null)
+                throw new EncodingServiceException("UserId or UserKey is empty");
+
+            // Default xmlResult if nothing is read from the response.
+            string xmlResult = "<response><error>Cannot establish a request to the server</error></response>";
+            query.UserId = UserId;
+            query.UserKey = UserKey;
+            string content = "xml=" + query.ToString();
+            query = null;
+
+            HttpWebRequest request = CreateRequest(UseSslConnection ? DefaultSslHost : DefaultHost);
+            request.ContentLength = content.Length;
+
+            // Begins the get request stream process.
+            request.BeginGetRequestStream((requestStreamAsyncResult) =>
+            {
+                // Starts writing query to the stream.
+                using (Stream stream = request.EndGetRequestStream(requestStreamAsyncResult))
+                {
+                    stream.Write(Encoding.UTF8.GetBytes(content), 0, content.Length);
+                }
+
+                // Begins the get response process.
+                request.BeginGetResponse((responseAsyncResult) =>
+                {
+                    // Reads the stream and parse it to xml string.
+                    using (WebResponse response = request.EndGetResponse(responseAsyncResult))
+                    {
+                        using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                        {
+                            xmlResult = reader.ReadToEnd();
+                        }
+                    }
+
+
+                    // callback with the xml result.
+                    callback(xmlResult);
+                }, null);
+            }, null);
+        }
+
+        /// <summary>
         /// Creates a HttpWebRequest.
         /// </summary>
         /// <returns>A HttpWebRequest object.</returns>
-        protected virtual HttpWebRequest CreateRequest()
+        protected virtual HttpWebRequest CreateRequest(Uri host)
         {
-            Uri host = UseSslConnection ? DefaultSslHost : DefaultHost;
             HttpWebRequest request = WebRequest.Create(host) as HttpWebRequest;
             if (request != null)
             {
