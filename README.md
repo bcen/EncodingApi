@@ -7,6 +7,8 @@ Click [here](http://www.encoding.com/api/category/category/complete_api_document
 
 ## Basic Usage
 
+Gets a list of media from server:
+
     EncodingServiceClient client = new EncodingServiceClient(api_id, api_key);
 
     foreach (var m in client.GetMediaList())
