@@ -40,9 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="WebServiceClient.cs" />
-    <Compile Include="Models\EncodingApiQuery.cs" />
-    <Compile Include="WebServiceException.cs" />
+    <Compile Include="EncodingServiceClient.cs" />
+    <Compile Include="Models\EncodingQuery.cs" />
+    <Compile Include="EncodingServiceException.cs" />
     <Compile Include="XmlResponse.cs" />
     <Compile Include="Models\XmlModelBase.cs" />
     <Compile Include="Models\EncodingFormat.cs" />

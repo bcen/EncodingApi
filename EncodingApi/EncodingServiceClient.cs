@@ -8,7 +8,7 @@ using EncodingApi.Models;
 
 namespace EncodingApi
 {
-    public class WebServiceClient
+    public class EncodingServiceClient
     {
         /// <summary>
         /// The default host URI.
@@ -48,7 +48,7 @@ namespace EncodingApi
         /// <summary>
         /// Initializes a new instance of the EncodingWebRequest class.
         /// </summary>
-        public WebServiceClient()
+        public EncodingServiceClient()
             : this(null, null)
         {
         }
@@ -59,7 +59,7 @@ namespace EncodingApi
         /// </summary>
         /// <param name="uid">The 3 to 5 digits user id.</param>
         /// <param name="ukey">The user key.</param>
-        public WebServiceClient(string uid, string ukey)
+        public EncodingServiceClient(string uid, string ukey)
         {
             UserId = uid;
             UserKey = ukey;
@@ -73,7 +73,7 @@ namespace EncodingApi
         /// <returns>An instance of GetMediaListResponse.</returns>
         public GetMediaListResponse SendGetMediaListRequest()
         {
-            string result = SendRequest(EncodingApiQuery.CreateGetMediaListQuery());
+            string result = SendRequest(EncodingQuery.CreateGetMediaListQuery());
             return new GetMediaListResponse(result);
         }
 
@@ -88,7 +88,7 @@ namespace EncodingApi
             if (result.Errors.Count > 0)
             {
                 string message = result.Errors.First();
-                WebServiceException ex = new WebServiceException(message);
+                EncodingServiceException ex = new EncodingServiceException(message);
                 ex.Data.Add("errors", result.Errors);
                 throw ex;
             }
@@ -96,10 +96,10 @@ namespace EncodingApi
             return result.MediaList;
         }
         
-        protected string SendRequest(EncodingApiQuery qry)
+        protected string SendRequest(EncodingQuery qry)
         {
             if (UserId == null || UserKey == null)
-                throw new WebServiceException("UserId or UserKey is empty");
+                throw new EncodingServiceException("UserId or UserKey is empty");
 
             string xmlResult = "<response><error>Cannot establish a request to the server</error></response>";
             HttpWebRequest request = CreateWebRequest();

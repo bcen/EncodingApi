@@ -8,22 +8,22 @@ namespace EncodingApi.Models
     /// <summary>
     /// A more object oriented way to construct a xml query for http://www.encoding.com.
     /// </summary>
-    public class EncodingApiQuery : XmlModelBase
+    public class EncodingQuery : XmlModelBase
     {
-        public EncodingApiQuery()
+        public EncodingQuery()
             : this("<query/>")
         {
         }
 
-        public EncodingApiQuery(string xml)
+        public EncodingQuery(string xml)
             : base(xml)
         {
         }
 
-        public static EncodingApiQuery CreateGetMediaListQuery()
+        public static EncodingQuery CreateGetMediaListQuery()
         {
-            EncodingApiQuery qry = new EncodingApiQuery();
-            qry.Action = EncodingApiQuery.QueryAction.GetMediaList;
+            EncodingQuery qry = new EncodingQuery();
+            qry.Action = EncodingQuery.QueryAction.GetMediaList;
             return qry;
         }
 
@@ -32,7 +32,7 @@ namespace EncodingApi.Models
         /// </summary>
         /// <param name="uri">A uri to the source.</param>
         /// <returns>A instance of this class for method chaining.</returns>
-        public EncodingApiQuery AddMultipleSource(IEnumerable<Uri> sourceList)
+        public EncodingQuery AddMultipleSource(IEnumerable<Uri> sourceList)
         {
             if (sourceList == null)
                 throw new ArgumentNullException("sourceList");
@@ -52,7 +52,7 @@ namespace EncodingApi.Models
         /// </remarks>
         /// <param name="uri">A uri to the source.</param>
         /// <returns>A instance of this class for method chaining.</returns>
-        public EncodingApiQuery AddSource(Uri uri)
+        public EncodingQuery AddSource(Uri uri)
         {
             if (uri == null)
                 throw new ArgumentNullException("uri");
@@ -85,7 +85,7 @@ namespace EncodingApi.Models
         /// </summary>
         /// <param name="formatList">A collection of <code>EncodingFormat</code>.</param>
         /// <returns></returns>
-        public EncodingApiQuery AddMultipleFormats(IEnumerable<EncodingFormat> formatList)
+        public EncodingQuery AddMultipleFormats(IEnumerable<EncodingFormat> formatList)
         {
             if (formatList == null)
                 throw new ArgumentNullException("formatList");
@@ -97,7 +97,7 @@ namespace EncodingApi.Models
             return this;
         }
 
-        public EncodingApiQuery AddFormat(EncodingFormat format)
+        public EncodingQuery AddFormat(EncodingFormat format)
         {
             if (format == null)
                 throw new ArgumentNullException("format");

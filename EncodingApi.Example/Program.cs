@@ -10,7 +10,7 @@ namespace EncodingApi.Example
     {
         public static void Main(string[] args)
         {
-            WebServiceClient request = new WebServiceClient("id", "key");
+            EncodingServiceClient request = new EncodingServiceClient("id", "key");
 
             try
             {
@@ -20,7 +20,7 @@ namespace EncodingApi.Example
                     Console.WriteLine(m.MediaFile.AbsoluteUri);
                 }
             }
-            catch (WebServiceException ex)
+            catch (EncodingServiceException ex)
             {
                 Console.WriteLine(ex.Message);
             }
