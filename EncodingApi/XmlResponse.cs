@@ -5,17 +5,17 @@ using System.Linq;
 
 namespace EncodingApi
 {
-    public abstract class ResponseBase : Models.XmlModelBase
+    public abstract class XmlResponse : Models.XmlModelBase
     {
         private string _message;
         private ICollection<string> _errors;
 
-        public ResponseBase()
+        public XmlResponse()
             : this("<response/>")
         {
         }
 
-        public ResponseBase(string xml)
+        public XmlResponse(string xml)
             : base(xml)
         {
         }

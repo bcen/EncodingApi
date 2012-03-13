@@ -1,6 +1,6 @@
 ﻿namespace EncodingApi
 {
-    public class AddMediaResponse : ResponseBase
+    public class AddMediaResponse : XmlResponse
     {
         public AddMediaResponse()
             : this("<response/>")

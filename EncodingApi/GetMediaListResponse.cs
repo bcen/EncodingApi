@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace EncodingApi
 {
-    public class GetMediaListResponse : ResponseBase
+    public class GetMediaListResponse : XmlResponse
     {
         private ICollection<Media> _mediaList;
 
