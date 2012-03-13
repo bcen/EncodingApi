@@ -2,6 +2,7 @@
 #### A .NET C# client wrapper for the [encoding.com](http://www.encoding.com/) API
 
 This is a preview of the API, all public APIs are subjected to change.
+
 Click [here](http://www.encoding.com/api/category/category/complete_api_documentation) for complete documentation.
 
 
@@ -24,5 +25,3 @@ or do it in the raw way:
     {
         Console.WriteLine(m.MediaId);
     }
-  
-    
