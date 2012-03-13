@@ -1,13 +1,13 @@
 # EncodingApi (Work in progress)
 #### A .NET C# client wrapper for the [encoding.com](http://www.encoding.com/) API
 
+This is a preview of the API, all public APIs are subjected to change.
 Click [here](http://www.encoding.com/api/category/category/complete_api_documentation) for complete documentation.
 
-### This is a preview of the API, all public APIs are subjected to change.
 
-## Basic Usage
+## Example
 
-Gets a list of media from server:
+Gets a list of media from the server:
 
     EncodingServiceClient client = new EncodingServiceClient(api_id, api_key);
 
@@ -15,3 +15,14 @@ Gets a list of media from server:
     {
         Console.WriteLine(m.MediaId);
     }
+    
+or do it in the raw way:
+
+    var response = client.SendGetMediaListRequest();
+    
+    foreach (var m in response.MediaList)
+    {
+        Console.WriteLine(m.MediaId);
+    }
+  
+    
