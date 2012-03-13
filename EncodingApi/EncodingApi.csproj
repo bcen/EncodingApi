@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="WebServiceClient.cs" />
     <Compile Include="Models\EncodingApiQuery.cs" />
-    <Compile Include="EncodingWebRequestException.cs" />
+    <Compile Include="WebServiceException.cs" />
     <Compile Include="XmlResponse.cs" />
     <Compile Include="Models\XmlModelBase.cs" />
     <Compile Include="Models\EncodingFormat.cs" />

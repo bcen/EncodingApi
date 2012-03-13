@@ -20,7 +20,7 @@ namespace EncodingApi.Example
                     Console.WriteLine(m.MediaFile.AbsoluteUri);
                 }
             }
-            catch (EncodingWebRequestException ex)
+            catch (WebServiceException ex)
             {
                 Console.WriteLine(ex.Message);
             }

@@ -88,7 +88,7 @@ namespace EncodingApi
             if (result.Errors.Count > 0)
             {
                 string message = result.Errors.First();
-                EncodingWebRequestException ex = new EncodingWebRequestException(message);
+                WebServiceException ex = new WebServiceException(message);
                 ex.Data.Add("errors", result.Errors);
                 throw ex;
             }
@@ -99,7 +99,7 @@ namespace EncodingApi
         protected string SendRequest(EncodingApiQuery qry)
         {
             if (UserId == null || UserKey == null)
-                throw new EncodingWebRequestException("UserId or UserKey is empty");
+                throw new WebServiceException("UserId or UserKey is empty");
 
             string xmlResult = "<response><error>Cannot establish a request to the server</error></response>";
             HttpWebRequest request = CreateWebRequest();
@@ -108,11 +108,10 @@ namespace EncodingApi
             {
                 qry.UserId = UserId;
                 qry.UserKey = UserKey;
-
                 string content = "xml=" + qry.ToString();
                 qry = null;
-
                 request.ContentLength = content.Length;
+
                 using (Stream stream = request.GetRequestStream())
                 {
                     stream.Write(Encoding.UTF8.GetBytes(content), 0, content.Length);

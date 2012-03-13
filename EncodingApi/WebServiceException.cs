@@ -5,9 +5,9 @@ using System.Text;
 
 namespace EncodingApi
 {
-    public class EncodingWebRequestException : Exception
+    public class WebServiceException : Exception
     {
-        public EncodingWebRequestException(string message)
+        public WebServiceException(string message)
             : base(message)
         {
         }
