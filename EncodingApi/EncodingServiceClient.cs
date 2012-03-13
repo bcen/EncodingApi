@@ -110,7 +110,7 @@ namespace EncodingApi
             // Default xmlResult if nothing is read from the response.
             string xmlResult = "<response><error>Cannot establish a request to the server</error></response>";
             
-            HttpWebRequest request = CreateWebRequest();
+            HttpWebRequest request = CreateRequest();
             if (request != null)
             {
                 query.UserId = UserId;
@@ -168,7 +168,7 @@ namespace EncodingApi
         /// Creates a HttpWebRequest.
         /// </summary>
         /// <returns>A HttpWebRequest object.</returns>
-        protected HttpWebRequest CreateWebRequest()
+        protected HttpWebRequest CreateRequest()
         {
             Uri host = UseSslConnection ? DefaultSslHost : DefaultHost;
             HttpWebRequest request = WebRequest.Create(host) as HttpWebRequest;
