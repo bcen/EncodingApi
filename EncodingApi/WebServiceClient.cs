@@ -8,7 +8,7 @@ using EncodingApi.Models;
 
 namespace EncodingApi
 {
-    public class EncodingWebRequest
+    public class WebServiceClient
     {
         /// <summary>
         /// The default host URI.
@@ -48,7 +48,7 @@ namespace EncodingApi
         /// <summary>
         /// Initializes a new instance of the EncodingWebRequest class.
         /// </summary>
-        public EncodingWebRequest()
+        public WebServiceClient()
             : this(null, null)
         {
         }
@@ -59,7 +59,7 @@ namespace EncodingApi
         /// </summary>
         /// <param name="uid">The 3 to 5 digits user id.</param>
         /// <param name="ukey">The user key.</param>
-        public EncodingWebRequest(string uid, string ukey)
+        public WebServiceClient(string uid, string ukey)
         {
             UserId = uid;
             UserKey = ukey;

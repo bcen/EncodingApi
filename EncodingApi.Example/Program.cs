@@ -10,7 +10,7 @@ namespace EncodingApi.Example
     {
         public static void Main(string[] args)
         {
-            EncodingWebRequest request = new EncodingWebRequest("id", "key");
+            WebServiceClient request = new WebServiceClient("id", "key");
 
             try
             {
