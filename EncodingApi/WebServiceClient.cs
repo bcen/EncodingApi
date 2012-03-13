@@ -33,7 +33,7 @@ namespace EncodingApi
         /// <summary>
         /// Gets and sets the option to use SSL.
         /// </summary>
-        public bool UseSsl { get; set; }
+        public bool UseSslConnection { get; set; }
 
         /// <summary>
         /// Gets and sets the timeout of the connection.
@@ -63,7 +63,8 @@ namespace EncodingApi
         {
             UserId = uid;
             UserKey = ukey;
-            Timeout = 100000;
+            Timeout = 100000; // Default value from HttpWebRequest.Timeout
+            UseSslConnection = true;
         }
 
         /// <summary>
@@ -74,11 +75,6 @@ namespace EncodingApi
         {
             string result = SendRequest(EncodingApiQuery.CreateGetMediaListQuery());
             return new GetMediaListResponse(result);
-        }
-
-        public void SendGetMediaListRequestAsync(Action<GetMediaListResponse> callback)
-        {
-            throw new NotImplementedException("Come back later");
         }
 
         /// <summary>
@@ -100,7 +96,7 @@ namespace EncodingApi
             return result.MediaList;
         }
         
-        private string SendRequest(EncodingApiQuery qry)
+        protected string SendRequest(EncodingApiQuery qry)
         {
             if (UserId == null || UserKey == null)
                 throw new EncodingWebRequestException("UserId or UserKey is empty");
@@ -132,9 +128,9 @@ namespace EncodingApi
             return xmlResult;
         }
 
-        private HttpWebRequest CreateWebRequest()
+        protected HttpWebRequest CreateWebRequest()
         {
-            Uri host = UseSsl ? DefaultSslHost : DefaultHost;
+            Uri host = UseSslConnection ? DefaultSslHost : DefaultHost;
             HttpWebRequest request = WebRequest.Create(host) as HttpWebRequest;
             if (request != null)
             {
