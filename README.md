@@ -6,9 +6,10 @@ Click [here](http://www.encoding.com/api/category/category/complete_api_document
 ### This is a preview of the API, all public APIs are subjected to change.
 
 ## Basic Usage
-  EncodingServiceClient client = new EncodingServiceClient(api_id, api_key);
-  
-  foreach (var m in client.GetMediaList())
-  {
-      Console.WriteLine(m.MediaId);
-  }
+
+    EncodingServiceClient client = new EncodingServiceClient(api_id, api_key);
+
+    foreach (var m in client.GetMediaList())
+    {
+        Console.WriteLine(m.MediaId);
+    }
