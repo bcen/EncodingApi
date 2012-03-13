@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace EncodingApi
 {
@@ -9,6 +6,11 @@ namespace EncodingApi
     {
         public EncodingServiceException(string message)
             : base(message)
+        {
+        }
+
+        public EncodingServiceException(string message, Exception innerException)
+            : base(message, innerException)
         {
         }
     }

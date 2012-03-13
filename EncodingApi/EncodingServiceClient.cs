@@ -128,7 +128,7 @@ namespace EncodingApi
                 }
                 catch (WebException ex)
                 {
-                    throw new EncodingServiceException(ex.Message);
+                    throw new EncodingServiceException(ex.Message, ex);
                 }
                 finally
                 {
@@ -150,7 +150,7 @@ namespace EncodingApi
                 }
                 catch (WebException ex)
                 {
-                    throw new EncodingServiceException(ex.Message);
+                    throw new EncodingServiceException(ex.Message, ex);
                 }
                 finally
                 {
