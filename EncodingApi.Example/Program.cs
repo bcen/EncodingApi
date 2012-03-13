@@ -17,25 +17,20 @@ namespace EncodingApi.Example
                 var list = client.GetMediaList();
                 foreach (var m in list)
                 {
+                    Console.WriteLine(m.MediaId);
                     Console.WriteLine(m.MediaFile.AbsoluteUri);
                 }
             }
             catch (EncodingServiceException ex)
             {
+                // Gets the error message.
                 Console.WriteLine(ex.Message);
-            }
 
-            try
-            {
-                var list = client.GetMediaList();
-                foreach (var m in list)
+                // Or a collection of errors.
+                foreach (string message in ex.Data["errors"] as ICollection<string>)
                 {
-                    Console.WriteLine(m.MediaFile.AbsoluteUri);
+                    Console.WriteLine(message);
                 }
-            }
-            catch (EncodingServiceException ex)
-            {
-                Console.WriteLine(ex.Message);
             }
 
             Console.WriteLine("Done");
