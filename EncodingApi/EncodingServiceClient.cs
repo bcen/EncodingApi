@@ -102,7 +102,7 @@ namespace EncodingApi
         /// </summary>
         /// <param name="query"></param>
         /// <returns>A xml string.</returns>
-        protected string SendRequest(EncodingQuery query)
+        protected virtual string SendRequest(EncodingQuery query)
         {
             if (UserId == null || UserKey == null)
                 throw new EncodingServiceException("UserId or UserKey is empty");
@@ -168,7 +168,7 @@ namespace EncodingApi
         /// Creates a HttpWebRequest.
         /// </summary>
         /// <returns>A HttpWebRequest object.</returns>
-        protected HttpWebRequest CreateRequest()
+        protected virtual HttpWebRequest CreateRequest()
         {
             Uri host = UseSslConnection ? DefaultSslHost : DefaultHost;
             HttpWebRequest request = WebRequest.Create(host) as HttpWebRequest;
