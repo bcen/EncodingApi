@@ -60,7 +60,18 @@ namespace EncodingApi.Models
         /// One or more format elements are required for AddMedia and UpdateMedia actions.
         /// </summary>
         [XmlElement("format")]
-        public EncodingFormat Format { get; set; }
+        public List<EncodingFormat> Formats
+        {
+            get
+            {
+                return (_formats ?? (_formats = new List<EncodingFormat>()));
+            }
+            set
+            {
+                _formats = value;
+            }
+        }
+        private List<EncodingFormat> _formats;
 
         /// <summary>
         /// Default constructor.
