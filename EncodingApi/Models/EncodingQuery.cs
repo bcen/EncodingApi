@@ -56,6 +56,9 @@ namespace EncodingApi.Models
         }
         private List<string> _sources;
 
+        [XmlElement("format")]
+        public EncodingFormat Format { get; set; }
+
         /// <summary>
         /// Default constructor.
         /// </summary>
