@@ -47,11 +47,7 @@ namespace EncodingApi.Models
         {
             get
             {
-                if (_sources == null)
-                {
-                    _sources = new List<string>();
-                }
-                return _sources;
+                return (_sources ?? (_sources = new List<string>()));
             }
             set
             {

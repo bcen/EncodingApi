@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
 using EncodingApi.Models;
 
 namespace EncodingApi
@@ -249,6 +251,51 @@ namespace EncodingApi
                 request.Proxy = Proxy;
             }
             return request;
+        }
+
+        public virtual string Serialize<T>(T obj) where T : class, new()
+        {
+            return Serialize<T>(obj, null);
+        }
+
+        public virtual string Serialize<T>(T obj, string indentChars) where T : class, new()
+        {
+            XmlSerializer ser = new XmlSerializer(typeof(T));
+            StringBuilder sb = new StringBuilder();
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            XmlWriterSettings settings = new XmlWriterSettings();
+
+            if (!String.IsNullOrEmpty(indentChars))
+            {
+                settings.IndentChars = indentChars;
+                settings.Indent = true;
+            }
+            ns.Add("", "");
+
+            using (XmlWriter writer = XmlWriter.Create(sb, settings))
+            {
+                ser.Serialize(writer, obj, ns);
+            }
+
+            if (sb.Length >= 37)
+            {
+                sb.Replace(Encoding.Unicode.WebName, Encoding.UTF8.WebName, 0, 37);
+            }
+
+            return sb.ToString();
+        }
+
+        public virtual T Deserialize<T>(string xml) where T : class, new()
+        {
+            T obj = default(T);
+            XmlSerializer ser = new XmlSerializer(typeof(T));
+
+            using (StringReader reader = new StringReader(xml))
+            {
+                obj = (T)ser.Deserialize(reader);
+            }
+
+            return obj;
         }
     }
 }
