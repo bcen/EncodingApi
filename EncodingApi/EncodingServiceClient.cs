@@ -76,20 +76,20 @@ namespace EncodingApi
         public GetMediaListResponse SendGetMediaListRequest()
         {
             string result = SendRequest(EncodingQuery.CreateGetMediaListQuery());
-            return new GetMediaListResponse(result);
+            return Deserialize<GetMediaListResponse>(result);
         }
         
         /// <summary>
         /// Sends a GetMediaList request asynchronously.
         /// </summary>
         /// <param name="callback">The callback to process the xml result.</param>
-        public void SendGetMediaListRequestAsync(Action<GetMediaListResponse> callback)
-        {
-            SendRequestAsync(EncodingQuery.CreateGetMediaListQuery(), (xmlResult) =>
-            {
-                callback(new GetMediaListResponse(xmlResult));
-            });
-        }
+        //public void SendGetMediaListRequestAsync(Action<GetMediaListResponse> callback)
+        //{
+        //    SendRequestAsync(EncodingQuery.CreateGetMediaListQuery(), (xmlResult) =>
+        //    {
+        //        callback(new GetMediaListResponse(xmlResult));
+        //    });
+        //}
 
         /// <summary>
         /// Internally it sends a GetMediaList request to the server and extract a list
@@ -110,15 +110,15 @@ namespace EncodingApi
             return result.MediaList;
         }
 
-        public void GetMediaListAsync(Action<ICollection<GetMediaListResponse.Media>> callback,
-                                      Action<ICollection<string>> errors)
-        {
-            SendGetMediaListRequestAsync((response) =>
-            {
-                callback(response.MediaList);
-                errors(response.Errors);
-            });
-        }
+        //public void GetMediaListAsync(Action<ICollection<GetMediaListResponse.Media>> callback,
+        //                              Action<ICollection<string>> errors)
+        //{
+        //    SendGetMediaListRequestAsync((response) =>
+        //    {
+        //        callback(response.MediaList);
+        //        errors(response.Errors);
+        //    });
+        //}
         
         /// <summary>
         /// Sends a HttpWebRequest with EncodingQuery to Encoding.com and returns a 
@@ -139,7 +139,7 @@ namespace EncodingApi
             {
                 query.UserId = UserId;
                 query.UserKey = UserKey;
-                string content = "xml=" + query.ToString();
+                string content = "xml=" + Serialize(query);
                 query = null;
                 request.ContentLength = content.Length;
 
@@ -202,7 +202,7 @@ namespace EncodingApi
             string xmlResult = "<response><error>Cannot establish a request to the server</error></response>";
             query.UserId = UserId;
             query.UserKey = UserKey;
-            string content = "xml=" + query.ToString();
+            string content = "xml=" + Serialize(query);
             query = null;
 
             HttpWebRequest request = CreateRequest(UseSslConnection ? DefaultSslHost : DefaultHost);

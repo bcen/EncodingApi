@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicResponse.cs" />
     <Compile Include="EncodingServiceClient.cs" />
     <Compile Include="Models\EncodingQuery.cs" />
     <Compile Include="EncodingServiceException.cs" />
