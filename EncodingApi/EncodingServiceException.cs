@@ -4,6 +4,11 @@ namespace EncodingApi
 {
     public class EncodingServiceException : Exception
     {
+        public EncodingServiceException()
+            : base()
+        {
+        }
+
         public EncodingServiceException(string message)
             : base(message)
         {

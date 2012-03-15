@@ -83,13 +83,13 @@ namespace EncodingApi
         /// Sends a GetMediaList request asynchronously.
         /// </summary>
         /// <param name="callback">The callback to process the xml result.</param>
-        //public void SendGetMediaListRequestAsync(Action<GetMediaListResponse> callback)
-        //{
-        //    SendRequestAsync(EncodingQuery.CreateGetMediaListQuery(), (xmlResult) =>
-        //    {
-        //        callback(new GetMediaListResponse(xmlResult));
-        //    });
-        //}
+        public void SendGetMediaListRequestAsync(Action<GetMediaListResponse> callback)
+        {
+            SendRequestAsync(EncodingQuery.CreateGetMediaListQuery(), (xmlResult) =>
+            {
+                callback(Deserialize<GetMediaListResponse>(xmlResult));
+            });
+        }
 
         /// <summary>
         /// Internally it sends a GetMediaList request to the server and extract a list
@@ -110,15 +110,15 @@ namespace EncodingApi
             return result.MediaList;
         }
 
-        //public void GetMediaListAsync(Action<ICollection<GetMediaListResponse.Media>> callback,
-        //                              Action<ICollection<string>> errors)
-        //{
-        //    SendGetMediaListRequestAsync((response) =>
-        //    {
-        //        callback(response.MediaList);
-        //        errors(response.Errors);
-        //    });
-        //}
+        public void GetMediaListAsync(Action<ICollection<GetMediaListResponse.Media>> callback,
+                                      Action<ICollection<string>> errors)
+        {
+            SendGetMediaListRequestAsync((response) =>
+            {
+                callback(response.MediaList);
+                errors(response.Errors);
+            });
+        }
         
         /// <summary>
         /// Sends a HttpWebRequest with EncodingQuery to Encoding.com and returns a 
