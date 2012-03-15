@@ -1,25 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace EncodingApi.Models
 {
     /// <summary>
     /// A more object oriented way to construct a xml query for http://www.encoding.com.
     /// </summary>
-    public class EncodingQuery : XmlModelBase
+    [XmlRoot("query")]
+    public class EncodingQuery
     {
+        /// <summary>
+        /// A unique user identifier.
+        /// </summary>
+        [XmlElement("userid")]
+        public string UserId { get; set; }
+
+        /// <summary>
+        /// User's unique authentication key string.
+        /// </summary>
+        [XmlElement("userkey")]
+        public string UserKey { get; set; }
+
+        /// <summary>
+        /// The action to be performed in the API request.
+        /// </summary>
+        [XmlElement("action")]
+        public string Action { get; set; }
+
+        /// <summary>
+        /// A unique identifier for each media. 
+        /// This field must be specified for the following actions: UpdateMedia, CancelMedia, 
+        /// GetStatus.
+        /// </summary>
+        [XmlElement("mediaid")]
+        public string MediaId { get; set; }
+
+        /// <summary>
+        /// Source media file. Must be specified only for AddMedia and AddMediaBenchmark actions.
+        /// Always use AddSourceUri(Uri) to have proper encoded URL string.
+        /// </summary>
+        [XmlElement("source")]
+        public List<string> Sources
+        {
+            get
+            {
+                if (_sources == null)
+                {
+                    _sources = new List<string>();
+                }
+                return _sources;
+            }
+            set
+            {
+                _sources = value;
+            }
+        }
+        private List<string> _sources;
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public EncodingQuery()
-            : this("<query/>")
         {
         }
 
-        public EncodingQuery(string xml)
-            : base(xml)
-        {
-        }
-
+        /// <summary>
+        /// Creates a complete query for action: GetMediaList.
+        /// </summary>
+        /// <returns>A complete query for GetMediaList.</returns>
         public static EncodingQuery CreateGetMediaListQuery()
         {
             EncodingQuery qry = new EncodingQuery();
@@ -28,211 +79,55 @@ namespace EncodingApi.Models
         }
 
         /// <summary>
-        /// Add multiple source files for AddMedia and AddMediaBechmark actions.
+        /// Adds source URL to the query.
         /// </summary>
-        /// <param name="uri">A uri to the source.</param>
-        /// <returns>A instance of this class for method chaining.</returns>
-        public EncodingQuery AddMultipleSource(IEnumerable<Uri> sourceList)
+        /// <param name="uri">The URL to be added.</param>
+        public void AddSourceUri(Uri uri)
         {
-            if (sourceList == null)
-                throw new ArgumentNullException("sourceList");
-            
-            foreach (Uri uri in sourceList)
+            Sources.Add(uri.AbsoluteUri);
+        }
+
+        /// <summary>
+        /// Gets URL at the specified position.
+        /// </summary>
+        /// <param name="index">The 0-based position index.</param>
+        /// <returns>An instance of Uri class.</returns>
+        public Uri GetSourceUriAt(int index)
+        {
+            return new Uri(Sources[index]);
+        }
+
+        /// <summary>
+        /// Gets all sources URL.
+        /// </summary>
+        /// <returns>List of URL in the query.</returns>
+        public IEnumerable<Uri> GetAllSourceUri()
+        {
+            var rawList = from rawUri in Sources
+                          select new Uri(rawUri);
+            return rawList;
+        }
+
+        /// <summary>
+        /// Sets the source URL at the specified index.
+        /// </summary>
+        /// <param name="index">The 0-based position index.</param>
+        /// <param name="newUri">The new URL to be setted.</param>
+        public void SetSourceUriAt(int index, Uri newUri)
+        {
+            Sources[index] = newUri.AbsoluteUri;
+        }
+
+        /// <summary>
+        /// Removes all URL in the query that matches the specified URL.
+        /// </summary>
+        /// <param name="uri">The matching URL to be removed.</param>
+        public void RemoveSourceUri(Uri uri)
+        {
+            Sources.RemoveAll((rawUri) =>
             {
-                AddSource(uri);
-            }
-            return this;
-        }
-
-        /// <summary>
-        /// Add a source file for AddMedia and AddMediaBechmark actions.
-        /// </summary>
-        /// <remarks>
-        /// Must be specified only for AddMedia and AddMediaBenchmark actions.
-        /// </remarks>
-        /// <param name="uri">A uri to the source.</param>
-        /// <returns>A instance of this class for method chaining.</returns>
-        public EncodingQuery AddSource(Uri uri)
-        {
-            if (uri == null)
-                throw new ArgumentNullException("uri");
-            
-            Root.Add(new XElement("source", uri.AbsoluteUri));
-            return this;
-        }
-
-        /// <summary>
-        /// Gets a IList of all the sources to be processed.
-        /// </summary>
-        /// <returns>A <code>List</code> of Uri of all the sources in the query.</returns>
-        public IList<Uri> GetAllSources()
-        {
-            var s = from x in Root.Elements("source")
-                    select new Uri(x.Value);
-            return s.ToList<Uri>();
-        }
-
-        /// <summary>
-        /// Removes all sources.
-        /// </summary>
-        public void RemoveAllSources()
-        {
-            Root.Elements("source").Remove();
-        }
-
-        /// <summary>
-        /// Add multiple format into the query.
-        /// </summary>
-        /// <param name="formatList">A collection of <code>EncodingFormat</code>.</param>
-        /// <returns></returns>
-        public EncodingQuery AddMultipleFormats(IEnumerable<EncodingFormat> formatList)
-        {
-            if (formatList == null)
-                throw new ArgumentNullException("formatList");
-
-            foreach (EncodingFormat f in formatList)
-            {
-                AddFormat(f);
-            }
-            return this;
-        }
-
-        public EncodingQuery AddFormat(EncodingFormat format)
-        {
-            if (format == null)
-                throw new ArgumentNullException("format");
-
-            Root.Add(XElement.Parse(format.ToString()));
-            return this;
-        }
-
-        public IList<EncodingFormat> GetAllFormats()
-        {
-            var s = from x in Root.Elements("format")
-                    select new EncodingFormat(ToString(x, false));
-            return s.ToList();
-        }
-
-        public void RemoveAllFormats()
-        {
-            Root.Elements("format").Remove();
-        }
-
-        /// <summary>
-        /// Gets or sets the unique user identifier id of the query.
-        /// <remarks>
-        /// This 3-5 digits number can be found in the My Account tab of the Client Interface.
-        /// </remarks>
-        /// </summary>
-        public string UserId
-        {
-            get
-            {
-                return GetXmlElementInnerText("userid");
-            }
-            set
-            {
-                SetXmlElementInnerText("userid", value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the unique authentication key of the query.
-        /// <remarks>
-        /// Created automatically when a user is created and can be regenerated at anytime in the
-        /// My Account tab of the Client Interface.
-        /// </remarks>
-        /// </summary>
-        public string UserKey
-        {
-            get
-            {
-                return GetXmlElementInnerText("userkey");
-            }
-            set
-            {
-                SetXmlElementInnerText("userkey", value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the action to be performed in the API request.
-        /// Use EncodingApiQuery.QueryAction to look up the availiable actions.
-        /// </summary>
-        public string Action
-        {
-            get
-            { 
-                return GetXmlElementInnerText("action"); 
-            }
-            set
-            { 
-                SetXmlElementInnerText("action", value); 
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the unique identifier for each media.
-        /// Required for UpdateMedia, CancelMedia and GetStatus action.
-        /// <remarks>
-        /// A unique identifier for each media. This field must be specified for the following
-        /// actions: UpdateMedia, CancelMedia, GetStatus.
-        /// </remarks>
-        /// </summary>
-        public string MediaId
-        {
-            get
-            { 
-                return GetXmlElementInnerText("mediaid"); 
-            }
-            set
-            { 
-                SetXmlElementInnerText("mediaid", value); 
-            }
-        }
-        
-        /// <summary>
-        /// Set to true to initiate the encoding process immediately when source video begins 
-        /// downloading to the processing center as opposed to waiting until after the download
-        /// has completed. Also, this feature can be used when source media is still uploading 
-        /// to the specified source FTP location - the system will recognize if the source file 
-        /// size increases while downloading, or soon after, and the "tail" will be downloaded 
-        /// and concatenated.
-        /// </summary>
-        public bool IsInstant
-        {
-            get
-            {
-                string text = GetXmlElementInnerText("instant");
-                if (String.IsNullOrEmpty(text))
-                {
-                    return false;
-                }
-                return text.Trim().ToLower().Equals("yes");
-            }
-            set
-            { 
-                SetXmlElementInnerText("instant", value ? "yes" : "no");
-            }
-        }
-
-        /// <summary>
-        /// Can be either an HTTP(S) URL for the script with which the result will be posted, or 
-        /// a mailto: link with email address for which the result info will be sent. This field
-        /// may be specified for AddMedia and AddMediaBenchmark actions.
-        /// </summary>
-        public Uri Notify
-        {
-            get
-            { 
-                string text = GetXmlElementInnerText("notify");
-                Uri uri = String.IsNullOrEmpty(text) ? null : new Uri(text);
-                return uri; 
-            }
-            set
-            {
-                SetXmlElementInnerText("notify", value == null ? null : value.AbsoluteUri);
-            }
+                return (uri.AbsoluteUri.Equals(rawUri));
+            });
         }
 
         /// <summary>
