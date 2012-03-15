@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 namespace EncodingApi.Models
 {
     /// <summary>
-    /// A more object oriented way to construct a xml query for http://www.encoding.com.
+    /// A object oriented way to construct a xml query for http://www.encoding.com.
     /// </summary>
     [XmlRoot("query")]
     public class EncodingQuery
@@ -56,6 +56,9 @@ namespace EncodingApi.Models
         }
         private List<string> _sources;
 
+        /// <summary>
+        /// One or more format elements are required for AddMedia and UpdateMedia actions.
+        /// </summary>
         [XmlElement("format")]
         public EncodingFormat Format { get; set; }
 
