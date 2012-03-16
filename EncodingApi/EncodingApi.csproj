@@ -44,7 +44,6 @@
     <Compile Include="EncodingServiceClient.cs" />
     <Compile Include="Models\EncodingQuery.cs" />
     <Compile Include="EncodingServiceException.cs" />
-    <Compile Include="XmlResponse.cs" />
     <Compile Include="Models\XmlModelBase.cs" />
     <Compile Include="Models\EncodingFormat.cs" />
     <Compile Include="GetMediaListResponse.cs" />
