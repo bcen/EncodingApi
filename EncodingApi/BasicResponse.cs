@@ -30,7 +30,7 @@ namespace EncodingApi
 
         public bool ShouldSerializeErrors()
         {
-            return (Errors.Count > 0);
+            return (_errors != null);
         }
     }
 }
