@@ -49,6 +49,8 @@ namespace EncodingApi
 
             public Media()
             {
+                MediaId = String.Empty;
+                MediaStatus = String.Empty;
             }
 
             public Uri GetMediaFileUri()
@@ -89,6 +91,16 @@ namespace EncodingApi
                     DateTime.TryParse(FinishDate, out d);
                 }
                 return d;
+            }
+
+            public bool ShouldSerializeMediaId()
+            {
+                return !String.IsNullOrEmpty(MediaId);
+            }
+
+            public bool ShouldSerializeMediaStatus()
+            {
+                return !String.IsNullOrEmpty(MediaStatus);
             }
         }
     }

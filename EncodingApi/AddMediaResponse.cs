@@ -14,6 +14,12 @@ namespace EncodingApi
 
         public AddMediaResponse()
         {
+            MediaId = String.Empty;
+        }
+
+        public bool ShouldSerializeMediaId()
+        {
+            return !String.IsNullOrEmpty(MediaId);
         }
     }
 }
