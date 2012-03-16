@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
+using System;
 
 namespace EncodingApi
 {
@@ -26,6 +27,12 @@ namespace EncodingApi
 
         public BasicResponse()
         {
+            Message = string.Empty;
+        }
+
+        public bool ShouldSerializeMessage()
+        {
+            return !String.IsNullOrEmpty(Message);
         }
 
         public bool ShouldSerializeErrors()
