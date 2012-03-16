@@ -28,16 +28,18 @@ or do it in the raw way:
 
 it also can be done asynchronously:
 
-    client.GetMediaList((mediaList) =>
+    EncodingServiceClient client = new EncodingServiceClient("id", "key");
+
+    client.GetMediaListAsync((mediaList) =>
     {
         foreach (var m in mediaList)
         {
-            Console.WriteLine(m.MediaId);
+            Console.WriteLine(m.MediaFile);
         }
     }, (errors) =>
     {
-        foreach (var message in errors)
+        foreach (var msg in errors)
         {
-            Console.WriteLine(message);
+            Console.WriteLine(msg);
         }
     });
