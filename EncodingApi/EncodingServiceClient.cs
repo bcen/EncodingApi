@@ -78,6 +78,21 @@ namespace EncodingApi
             string result = SendRequest(EncodingQuery.CreateGetMediaListQuery());
             return Deserialize<GetMediaListResponse>(result);
         }
+
+        public AddMediaResponse SendAddMediaRequest(IEnumerable<Uri> sources, 
+                                                    IEnumerable<EncodingFormat> formats)
+        {
+            EncodingQuery qry = new EncodingQuery();
+            qry.Action = EncodingQuery.QueryAction.AddMedia;
+            foreach (var uri in sources)
+            {
+                qry.AddSourceUri(uri);
+            }
+            qry.Formats = formats.ToList<EncodingFormat>();
+
+            string xmlResult = SendRequest(qry);
+            return Deserialize<AddMediaResponse>(xmlResult);
+        }
         
         /// <summary>
         /// Sends a GetMediaList request asynchronously.
