@@ -79,6 +79,12 @@ namespace EncodingApi
             return Deserialize<GetMediaListResponse>(result);
         }
 
+        /// <summary>
+        /// Sends a AddMedia request to the server.
+        /// </summary>
+        /// <param name="sources">List of sources to be added.</param>
+        /// <param name="formats">List of formats for the sources.</param>
+        /// <returns>An instance of AddMediaResponse class.</returns>
         public AddMediaResponse SendAddMediaRequest(IEnumerable<Uri> sources, 
                                                     IEnumerable<EncodingFormat> formats)
         {
