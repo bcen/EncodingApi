@@ -163,6 +163,9 @@ namespace EncodingApi.Models
         /// <param name="uriString">The URL string to be added.</param>
         public void AddSourceUri(string uriString)
         {
+            if (uriString == null)
+                throw new ArgumentNullException("uriString cannot be null.");
+
             if (!Uri.IsWellFormedUriString(uriString, UriKind.Absolute))
             {
                 uriString = Uri.EscapeUriString(uriString);
@@ -227,8 +230,11 @@ namespace EncodingApi.Models
         /// <param name="uriString">The new Uri to be setted.</param>
         public void SetNotifyUri(string uriString)
         {
-            if (String.IsNullOrEmpty(uriString))
-                throw new ArgumentException("uriString cannot be null nor empty string.");
+            if (uriString == null)
+            {
+                SetNotifyUri((Uri)null);
+                return;
+            }
 
             // If the uriString is not well formed, tries to escape the string.
             if (!Uri.IsWellFormedUriString(uriString, UriKind.Absolute))
