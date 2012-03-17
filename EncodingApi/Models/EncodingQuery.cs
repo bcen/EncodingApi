@@ -60,8 +60,16 @@ namespace EncodingApi.Models
         [XmlElement("notify")]
         public string Notify { get; set; }
 
+        /// <summary>
+        /// Set to 'yes' to initiate the encoding process immediately when source video begins
+        /// downloading to our processing center as opposed to waiting until after the
+        /// download has completed. Also, this feature can be used when source media is
+        /// still uploading to the specified source FTP location - our system will recognize if
+        /// the source file size increases while downloading, or soon after, and the "tail" will
+        /// be downloaded and concatenated.
+        /// </summary>
         [XmlElement("instant")]
-        public bool? IsInstant { get; set; }
+        public string Instant { get; set; }
 
         /// <summary>
         /// To test whether to serialize UserId or not.
@@ -106,10 +114,10 @@ namespace EncodingApi.Models
         public bool ShouldSerializeNotify() { return !String.IsNullOrEmpty(Notify); }
 
         /// <summary>
-        /// To test whether to serialize IsInstance or not.
+        /// To test whether to serialize Instant or not.
         /// </summary>
-        /// <returns>True if IsInstant is assigned with a value, otherwise false.</returns>
-        public bool ShouldSerializeIsInstant() { return IsInstant.HasValue; }
+        /// <returns>True if Instant is not null nor empty string, otherwise false.</returns>
+        public bool ShouldSerializeInstant() { return !String.IsNullOrEmpty(Instant); }
 
         /// <summary>
         /// Default constructor.
@@ -121,6 +129,7 @@ namespace EncodingApi.Models
             Action = String.Empty;
             MediaId = String.Empty;
             Notify = String.Empty;
+            Instant = String.Empty;
             Sources = new List<string>();
             Formats = new List<EncodingFormat>();
         }
@@ -142,20 +151,28 @@ namespace EncodingApi.Models
         /// <param name="uri">The URL to be added.</param>
         public void AddSourceUri(Uri uri)
         {
+            if (uri == null)
+                throw new ArgumentNullException("uri cannot be null.");
+
             Sources.Add(uri.AbsoluteUri);
         }
 
         /// <summary>
-        /// Gets URL at the specified position.
+        /// Adds source URL to the query.
         /// </summary>
-        /// <param name="index">The 0-based position index.</param>
-        /// <returns>An instance of Uri class.</returns>
-        public Uri GetSourceUriAt(int index)
+        /// <param name="uriString">The URL string to be added.</param>
+        public void AddSourceUri(string uriString)
         {
-            if (index < 0)
-                throw new IndexOutOfRangeException("index cannot be less than 0.");
+            if (!Uri.IsWellFormedUriString(uriString, UriKind.Absolute))
+            {
+                uriString = Uri.EscapeUriString(uriString);
+            }
 
-            return new Uri(Sources[index]);
+            Uri uri = null;
+            if (Uri.TryCreate(uriString, UriKind.Absolute, out uri))
+            {
+                AddSourceUri(uri);
+            }
         }
 
         /// <summary>
@@ -167,19 +184,6 @@ namespace EncodingApi.Models
             var rawList = from rawUri in Sources
                           select new Uri(rawUri);
             return rawList;
-        }
-
-        /// <summary>
-        /// Sets the source URL at the specified index.
-        /// </summary>
-        /// <param name="index">The 0-based position index.</param>
-        /// <param name="newUri">The new URL to be setted.</param>
-        public void SetSourceUriAt(int index, Uri newUri)
-        {
-            if (index < 0)
-                throw new IndexOutOfRangeException("index cannot be less than 0.");
-
-            Sources[index] = newUri.AbsoluteUri;
         }
 
         /// <summary>
@@ -237,6 +241,32 @@ namespace EncodingApi.Models
             {
                 SetNotifyUri(uri);
             }
+        }
+
+        /// <summary>
+        /// To test if the Instant property is set to yes or no.
+        /// </summary>
+        /// <returns>True if Instant == "yes", otherwise false.</returns>
+        public bool IsInstant()
+        {
+            return String.IsNullOrEmpty(Instant) ? false : (Instant.ToLower().StartsWith("yes"));
+        }
+
+        /// <summary>
+        /// Sets Instant to be "yes".
+        /// </summary>
+        public void TurnOnInstantProcess()
+        {
+            Instant = "yes";
+        }
+
+        /// <summary>
+        /// Sets Instant to be String.Empty, which tells the xml serializer not to serialize
+        /// this property.
+        /// </summary>
+        public void TurnOffInstantProcess()
+        {
+            Instant = String.Empty;
         }
 
         /// <summary>
