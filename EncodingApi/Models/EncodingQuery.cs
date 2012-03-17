@@ -43,41 +43,70 @@ namespace EncodingApi.Models
         /// Always use AddSourceUri(Uri) to have proper encoded URL string.
         /// </summary>
         [XmlElement("source")]
-        public List<string> Sources
-        {
-            get
-            {
-                return (_sources ?? (_sources = new List<string>()));
-            }
-            set
-            {
-                _sources = value;
-            }
-        }
-        private List<string> _sources;
+        public List<string> Sources { get; set; }
 
         /// <summary>
         /// One or more format elements are required for AddMedia and UpdateMedia actions.
         /// </summary>
         [XmlElement("format")]
-        public List<EncodingFormat> Formats
-        {
-            get
-            {
-                return (_formats ?? (_formats = new List<EncodingFormat>()));
-            }
-            set
-            {
-                _formats = value;
-            }
-        }
-        private List<EncodingFormat> _formats;
+        public List<EncodingFormat> Formats { get; set; }
+        
+        [XmlElement("isinstant")]
+        public bool? IsInstant { get; set; }
+
+        /// <summary>
+        /// To test whether to serialize UserId or not.
+        /// </summary>
+        /// <returns>True if UserId is not null nor empty string, otherwise false.</returns>
+        public bool ShouldSerializeUserId() { return !String.IsNullOrEmpty(UserId); }
+
+        /// <summary>
+        /// To test whether to serialize UserKey or not.
+        /// </summary>
+        /// <returns>True if UserKey is not null nor empty string, otherwise false.</returns>
+        public bool ShouldSerializeUserKey() { return !String.IsNullOrEmpty(UserId); }
+
+        /// <summary>
+        /// To test whether to serialize Action or not.
+        /// </summary>
+        /// <returns>True if Action is not null nor empty string, otherwise false.</returns>
+        public bool ShouldSerializeAction() { return !String.IsNullOrEmpty(Action); }
+
+        /// <summary>
+        /// To test whether to serialize MediaId or not.
+        /// </summary>
+        /// <returns>True if MediaId is not null nor empty string, otherwise false.</returns>
+        public bool ShouldSerializeMediaId() { return !String.IsNullOrEmpty(MediaId); }
+
+        /// <summary>
+        /// To test whether to serialize Sources or not.
+        /// </summary>
+        /// <returns>True if Sources count is greater than zero, otherwise false.</returns>
+        public bool ShouldSerializeSources() { return (Sources.Count > 0); }
+
+        /// <summary>
+        /// To test whether to serialize Formats or not.
+        /// </summary>
+        /// <returns>True if Formats count is greater than zero, otherwise false.</returns>
+        public bool ShouldSerializeFormats() { return (Formats.Count > 0); }
+
+        /// <summary>
+        /// To test whether to serialize IsInstance or not.
+        /// </summary>
+        /// <returns>True if IsInstant is assigned with a value, otherwise false.</returns>
+        public bool ShouldSerializeIsInstant() { return IsInstant.HasValue; }
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public EncodingQuery()
         {
+            UserId = String.Empty;
+            UserKey = String.Empty;
+            Action = String.Empty;
+            MediaId = String.Empty;
+            Sources = new List<string>();
+            Formats = new List<EncodingFormat>();
         }
 
         /// <summary>
