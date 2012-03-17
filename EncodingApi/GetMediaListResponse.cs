@@ -39,7 +39,26 @@ namespace EncodingApi
             /// The source URL of the media.
             /// </summary>
             [XmlElement("mediafile")]
-            public string MediaFile { get; set; }
+            public string MediaFile
+            {
+                get
+                {
+                    return _mediaFile == null ? null : _mediaFile.AbsoluteUri;
+                }
+                set
+                {
+                    if (!String.IsNullOrEmpty(value) 
+                        && Uri.IsWellFormedUriString(value, UriKind.Absolute))
+                    {
+                        _mediaFile = new Uri(Uri.EscapeUriString(value));
+                    }
+                    else
+                    {
+                        _mediaFile = null;
+                    }
+                }
+            }
+            private Uri _mediaFile;
 
             /// <summary>
             /// The ID of the media.
@@ -90,6 +109,7 @@ namespace EncodingApi
             {
                 MediaId = String.Empty;
                 MediaStatus = String.Empty;
+                _mediaFile = null;
             }
 
             /// <summary>
@@ -98,12 +118,16 @@ namespace EncodingApi
             /// <returns>An instance of Uri class.</returns>
             public Uri GetMediaFileUri()
             {
-                Uri uri = null;
-                if (!String.IsNullOrEmpty(MediaFile))
-                {
-                    uri = new Uri(MediaFile);
-                }
-                return uri;
+                return _mediaFile;
+            }
+
+            /// <summary>
+            /// Sets the MediaFile URL string with specified Uri.
+            /// </summary>
+            /// <param name="newUri">The new Uri to be setted.</param>
+            public void SetMediaFileUri(Uri newUri)
+            {
+                _mediaFile = newUri;
             }
 
             /// <summary>
