@@ -46,12 +46,6 @@ namespace EncodingApi.Models
         public List<string> Sources { get; set; }
 
         /// <summary>
-        /// One or more format elements are required for AddMedia and UpdateMedia actions.
-        /// </summary>
-        [XmlElement("format")]
-        public List<EncodingFormat> Formats { get; set; }
-        
-        /// <summary>
         /// Can be either an HTTP(S) URL for the script with which the result will be posted,
         /// or a mailto: link with email address for which the result info will be sent. 
         /// This field may be specified for AddMedia and AddMediaBenchmark actions.
@@ -70,6 +64,12 @@ namespace EncodingApi.Models
         /// </summary>
         [XmlElement("instant")]
         public string Instant { get; set; }
+
+        /// <summary>
+        /// One or more format elements are required for AddMedia and UpdateMedia actions.
+        /// </summary>
+        [XmlElement("format")]
+        public List<EncodingFormat> Formats { get; set; }
 
         /// <summary>
         /// To test whether to serialize UserId or not.
@@ -102,12 +102,6 @@ namespace EncodingApi.Models
         public bool ShouldSerializeSources() { return (Sources.Count > 0); }
 
         /// <summary>
-        /// To test whether to serialize Formats or not.
-        /// </summary>
-        /// <returns>True if Formats count is greater than zero, otherwise false.</returns>
-        public bool ShouldSerializeFormats() { return (Formats.Count > 0); }
-
-        /// <summary>
         /// To test whether to serialize Notify or not.
         /// </summary>
         /// <returns>True if Notify is not null nor empty string, otherwise false.</returns>
@@ -118,6 +112,12 @@ namespace EncodingApi.Models
         /// </summary>
         /// <returns>True if Instant is not null nor empty string, otherwise false.</returns>
         public bool ShouldSerializeInstant() { return !String.IsNullOrEmpty(Instant); }
+
+        /// <summary>
+        /// To test whether to serialize Formats or not.
+        /// </summary>
+        /// <returns>True if Formats count is greater than zero, otherwise false.</returns>
+        public bool ShouldSerializeFormats() { return (Formats.Count > 0); }
 
         /// <summary>
         /// Default constructor.
