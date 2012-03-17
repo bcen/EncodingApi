@@ -51,7 +51,16 @@ namespace EncodingApi.Models
         [XmlElement("format")]
         public List<EncodingFormat> Formats { get; set; }
         
-        [XmlElement("isinstant")]
+        /// <summary>
+        /// Can be either an HTTP(S) URL for the script with which the result will be posted,
+        /// or a mailto: link with email address for which the result info will be sent. 
+        /// This field may be specified for AddMedia and AddMediaBenchmark actions.
+        /// SetNotifyUri() will sanitize the url string.
+        /// </summary>
+        [XmlElement("notify")]
+        public string Notify { get; set; }
+
+        [XmlElement("instant")]
         public bool? IsInstant { get; set; }
 
         /// <summary>
@@ -91,6 +100,12 @@ namespace EncodingApi.Models
         public bool ShouldSerializeFormats() { return (Formats.Count > 0); }
 
         /// <summary>
+        /// To test whether to serialize Notify or not.
+        /// </summary>
+        /// <returns>True if Notify is not null nor empty string, otherwise false.</returns>
+        public bool ShouldSerializeNotify() { return !String.IsNullOrEmpty(Notify); }
+
+        /// <summary>
         /// To test whether to serialize IsInstance or not.
         /// </summary>
         /// <returns>True if IsInstant is assigned with a value, otherwise false.</returns>
@@ -105,6 +120,7 @@ namespace EncodingApi.Models
             UserKey = String.Empty;
             Action = String.Empty;
             MediaId = String.Empty;
+            Notify = String.Empty;
             Sources = new List<string>();
             Formats = new List<EncodingFormat>();
         }
@@ -136,6 +152,9 @@ namespace EncodingApi.Models
         /// <returns>An instance of Uri class.</returns>
         public Uri GetSourceUriAt(int index)
         {
+            if (index < 0)
+                throw new IndexOutOfRangeException("index cannot be less than 0.");
+
             return new Uri(Sources[index]);
         }
 
@@ -157,6 +176,9 @@ namespace EncodingApi.Models
         /// <param name="newUri">The new URL to be setted.</param>
         public void SetSourceUriAt(int index, Uri newUri)
         {
+            if (index < 0)
+                throw new IndexOutOfRangeException("index cannot be less than 0.");
+
             Sources[index] = newUri.AbsoluteUri;
         }
 
@@ -166,10 +188,55 @@ namespace EncodingApi.Models
         /// <param name="uri">The matching URL to be removed.</param>
         public void RemoveSourceUri(Uri uri)
         {
+            if (uri == null)
+                throw new ArgumentNullException("uri cannot be null.");
+
             Sources.RemoveAll((rawUri) =>
             {
                 return (uri.AbsoluteUri.Equals(rawUri));
             });
+        }
+
+        /// <summary>
+        /// Returns a Notify Uri.
+        /// </summary>
+        /// <returns>An instance of Uri class.</returns>
+        public Uri GetNotifyUri()
+        {
+            Uri uri = null;
+            Uri.TryCreate(Notify, UriKind.Absolute, out uri);
+            return uri;
+        }
+
+        /// <summary>
+        /// Sets the Notify string property with the specified Uri.
+        /// </summary>
+        /// <param name="newUri">The new Uri to be setted.</param>
+        public void SetNotifyUri(Uri newUri)
+        {
+            Notify = (newUri == null) ? String.Empty : newUri.AbsoluteUri;
+        }
+
+        /// <summary>
+        /// Sets the Notify string property with the specified uriString.
+        /// </summary>
+        /// <param name="uriString">The new Uri to be setted.</param>
+        public void SetNotifyUri(string uriString)
+        {
+            if (String.IsNullOrEmpty(uriString))
+                throw new ArgumentException("uriString cannot be null nor empty string.");
+
+            // If the uriString is not well formed, tries to escape the string.
+            if (!Uri.IsWellFormedUriString(uriString, UriKind.Absolute))
+            {
+                uriString = Uri.EscapeUriString(uriString);
+            }
+
+            Uri uri = null;
+            if (Uri.TryCreate(uriString, UriKind.Absolute, out uri))
+            {
+                SetNotifyUri(uri);
+            }
         }
 
         /// <summary>
