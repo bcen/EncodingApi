@@ -13,15 +13,15 @@ namespace EncodingApi.Test
         {
             EncodingServiceClient client = new EncodingServiceClient();
             string xml =
-@"<?xml version=""1.0""?>
-<query>
-    <userid>7778</userid>
-    <userkey>longkey</userkey>
-    <action>AddMedia</action>
-    <mediaid>1234</mediaid>
-    <source>http://www.yahoo.com/mp4</source>
-    <notify>http://callback.com/callback</notify>
-</query>";
+            @"<?xml version=""1.0""?>
+            <query>
+                <userid>7778</userid>
+                <userkey>longkey</userkey>
+                <action>AddMedia</action>
+                <mediaid>1234</mediaid>
+                <source>http://www.yahoo.com/mp4</source>
+                <notify>http://callback.com/callback</notify>
+            </query>";
             qry1 = client.Deserialize<EncodingQuery>(xml);
         }
 
@@ -64,8 +64,20 @@ namespace EncodingApi.Test
         public void TestDeleteProperties()
         {
             qry1.UserId = String.Empty;
+            qry1.UserKey = String.Empty;
             qry1.Action = String.Empty;
+            qry1.MediaId = String.Empty;
+            qry1.Sources.Clear();
+            qry1.Formats.Clear();
+            qry1.Notify = String.Empty;
+
             Assert.Equal(String.Empty, qry1.UserId);
+            Assert.Equal(String.Empty, qry1.UserKey);
+            Assert.Equal(String.Empty, qry1.Action);
+            Assert.Equal(String.Empty, qry1.MediaId);
+            Assert.Empty(qry1.Sources);
+            Assert.Empty(qry1.Formats);
+            Assert.Equal(null, qry1.GetNotifyUri());
         }
 
         public void Dispose()

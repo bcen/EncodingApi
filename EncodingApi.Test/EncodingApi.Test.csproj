@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -40,11 +40,11 @@
     <Compile Include="EncodingQueryTest.cs" />
     <Compile Include="EncodingFormatTest.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\EncodingApi.Mono\EncodingApi.csproj">
+    <ProjectReference Include="..\EncodingApi\EncodingApi.csproj">
       <Project>{CD8DD295-5D58-4F5A-B1EA-98CC26075006}</Project>
       <Name>EncodingApi</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -43,7 +43,7 @@ namespace EncodingApi.Test
         }
 
         [Fact]
-        public void TestEmptyProperties()
+        public void TestDeleteProperties()
         {
             EncodingFormat f = new EncodingFormat();
 
