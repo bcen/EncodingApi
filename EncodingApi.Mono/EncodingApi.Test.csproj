@@ -52,5 +52,8 @@
     <Compile Include="..\EncodingApi.Test\EncodingQueryTest.cs">
       <Link>EncodingQueryTest.cs</Link>
     </Compile>
+    <Compile Include="..\EncodingApi.Test\EncodingServiceClientTest.cs">
+      <Link>EncodingServiceClientTest.cs</Link>
+    </Compile>
   </ItemGroup>
 </Project>

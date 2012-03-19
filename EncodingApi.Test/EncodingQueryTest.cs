@@ -21,6 +21,9 @@ namespace EncodingApi.Test
                 <mediaid>1234</mediaid>
                 <source>http://www.yahoo.com/mp4</source>
                 <notify>http://callback.com/callback</notify>
+                <format>
+                    <output>mp4</output>
+                </format>
             </query>";
             qry1 = client.Deserialize<EncodingQuery>(xml);
         }
@@ -36,7 +39,8 @@ namespace EncodingApi.Test
             Assert.Equal("1234", qry1.MediaId);
             Assert.Contains(new Uri("http://www.yahoo.com/mp4"), qry1.GetAllSourceUri());
             Assert.Equal(new Uri("http://callback.com/callback"), qry1.GetNotifyUri());
-            Assert.Empty(qry1.Formats);
+            Assert.NotEmpty(qry1.Formats);
+            Assert.Equal("mp4", qry1.Formats.First().Output);
         }
 
         [Fact]
@@ -49,6 +53,7 @@ namespace EncodingApi.Test
             qry2.MediaId = qry1.MediaId;
             qry2.AddSourceUri(qry1.GetAllSourceUri().First());
             qry2.SetNotifyUri(qry1.GetNotifyUri());
+            qry2.Formats.Add(qry1.Formats.First());
 
             Assert.NotNull(qry2);
             Assert.Equal(qry1.UserId, qry2.UserId);
@@ -57,7 +62,9 @@ namespace EncodingApi.Test
             Assert.Equal(qry1.MediaId, qry2.MediaId);
             Assert.Equal(qry1.GetAllSourceUri(), qry2.GetAllSourceUri());
             Assert.Equal(qry1.GetNotifyUri(), qry2.GetNotifyUri());
-            Assert.Empty(qry2.Formats);
+            Assert.Equal(qry1.Formats.First().Output, qry2.Formats.First().Output);
+            Assert.Same(qry1.Formats.First(), qry2.Formats[0]);
+            Assert.NotSame(qry1.Formats, qry2.Formats);
         }
 
         [Fact]
