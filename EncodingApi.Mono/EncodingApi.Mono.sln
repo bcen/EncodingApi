@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncodingApi", "EncodingApi.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncodingApi.Example", "EncodingApi.Example.csproj", "{C718DBCA-AB0F-4A02-A2DC-5DA75D88AD86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncodingApi.Test", "..\EncodingApi.Test\EncodingApi.Test.csproj", "{45DD40CB-2D76-491B-AF5F-5555C2A3CA66}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncodingApi.Test", "EncodingApi.Test.csproj", "{45DD40CB-2D76-491B-AF5F-5555C2A3CA66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
