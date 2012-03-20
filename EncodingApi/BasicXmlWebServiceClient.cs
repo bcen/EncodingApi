@@ -13,12 +13,13 @@ namespace EncodingApi
     public abstract class BasicXmlWebServiceClient
     {
         /// <summary>
-        /// The default host URI.
+        /// The default host.
         /// </summary>
         public abstract Uri DefaultHost { get; }
 
         /// <summary>
-        /// The host URI to use when SSL is enabled.
+        /// The default host to use when SSL is enabled.
+        /// Sets UseSslConnection to true to enable SSL connection.
         /// </summary>
         public abstract Uri DefaultSslHost { get; }
 
@@ -47,7 +48,7 @@ namespace EncodingApi
         }
 
         /// <summary>
-        /// Creates a HttpWebRequest.
+        /// Creates a HttpWebRequest for that used in GetXmlResponse and GetXmlResponseAsync.
         /// </summary>
         /// <returns>A HttpWebRequest object.</returns>
         protected virtual HttpWebRequest CreateRequest(Uri host)
@@ -64,9 +65,9 @@ namespace EncodingApi
         }
 
         /// <summary>
-        /// Gets xml response.
+        /// Gets the response in xml string format.
         /// </summary>
-        /// <param name="xmlRequestString">The xml request string for parameter "xml"</param>
+        /// <param name="xmlRequestString">The xml request string for the parameter: "xml".</param>
         /// <returns>The xml response string.</returns>
         protected virtual string GetXmlResponse(string xmlRequestString)
         {
