@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddMediaResponse.cs" />
+    <Compile Include="BasicXmlWebServiceClient.cs" />
     <Compile Include="BasicResponse.cs" />
     <Compile Include="EncodingServiceClient.cs" />
     <Compile Include="Models\EncodingQuery.cs" />

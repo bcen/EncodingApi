@@ -20,7 +20,7 @@ namespace EncodingApi.Test
 
             try
             {
-                client.SendGetMediaListRequest();
+                client.GetResponse<GetMediaListResponse>(new Models.EncodingQuery());
             }
             catch (EncodingServiceException ex)
             {
