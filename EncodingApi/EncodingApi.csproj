@@ -43,7 +43,8 @@
     <Compile Include="AddMediaResponse.cs" />
     <Compile Include="BasicXmlWebServiceClient.cs" />
     <Compile Include="BasicResponse.cs" />
-    <Compile Include="EncodingServiceClient.cs" />
+    <Compile Include="EncodingServiceClient.Async.cs" />
+    <Compile Include="EncodingServiceClient.Sync.cs" />
     <Compile Include="Models\EncodingQuery.cs" />
     <Compile Include="EncodingServiceException.cs" />
     <Compile Include="Models\EncodingFormat.cs" />

@@ -63,6 +63,11 @@ namespace EncodingApi
             return request;
         }
 
+        /// <summary>
+        /// Gets xml response.
+        /// </summary>
+        /// <param name="xmlRequestString">The xml request string for parameter "xml"</param>
+        /// <returns>The xml response string.</returns>
         protected virtual string GetXmlResponse(string xmlRequestString)
         {
             // Default xmlResponse if nothing is read from the response.
@@ -163,11 +168,24 @@ namespace EncodingApi
             }, null);
         }
 
+        /// <summary>
+        /// Serializes the object into xml string.
+        /// </summary>
+        /// <typeparam name="T">The type of the object to be serialized.</typeparam>
+        /// <param name="obj">The object to be serialized.</param>
+        /// <returns>The xml string.</returns>
         public virtual string Serialize<T>(T obj) where T : class, new()
         {
             return Serialize<T>(obj, null);
         }
 
+        /// <summary>
+        /// Serializes the object into xml string with the specified indentation characters.
+        /// </summary>
+        /// <typeparam name="T">The type of the object to be serialized.</typeparam>
+        /// <param name="obj">The object to be serialized.</param>
+        /// <param name="indentChars">The indentation string.</param>
+        /// <returns>The xml string.</returns>
         public virtual string Serialize<T>(T obj, string indentChars) where T : class, new()
         {
             XmlSerializer ser = new XmlSerializer(typeof(T));
@@ -195,6 +213,12 @@ namespace EncodingApi
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Deserializes the xml string into object with the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type of the return object.</typeparam>
+        /// <param name="xml">The xml string to be deserialized.</param>
+        /// <returns>The object with the specified type that represents the xml string.</returns>
         public virtual T Deserialize<T>(string xml) where T : class, new()
         {
             T obj = default(T);
