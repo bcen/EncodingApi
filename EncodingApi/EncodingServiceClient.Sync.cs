@@ -87,5 +87,36 @@ namespace EncodingApi
             }
             return result.MediaList;
         }
+
+        public int AddMedia(IEnumerable<Uri> sources, IEnumerable<EncodingFormat> formats,
+                            bool isInstant=false, Uri notifyUri=null)
+        {
+            if (sources == null || formats == null)
+                throw new ArgumentNullException("sources or formats cannot be null.");
+
+            EncodingQuery query = new EncodingQuery();
+            query.Action = EncodingQuery.QueryAction.AddMedia;
+            query.Formats = formats.ToList();
+            query.SetNotifyUri(notifyUri);
+            foreach (Uri uri in sources)
+            {
+                query.AddSourceUri(uri);
+            }
+            if (isInstant)
+            {
+                query.TurnOnInstantProcess();
+            }
+            
+            var result = GetResponse<AddMediaResponse>(query);
+            if (result.Errors.Count > 0)
+            {
+                string message = result.Errors.First();
+                EncodingServiceException ex = new EncodingServiceException(message);
+                ex.Data.Add("errors", result.Errors);
+                throw ex;
+            }
+
+            return Convert.ToInt32(result.MediaId);
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using Xunit;
+using EncodingApi.Models;
 
 namespace EncodingApi.Test
 {
@@ -21,6 +22,12 @@ namespace EncodingApi.Test
             Assert.Throws<EncodingServiceException>(() =>
             {
                 client.GetMediaList();
+            });
+
+            Assert.Throws<EncodingServiceException>(() =>
+            {
+                client.AddMedia(new Uri[]{ }, new EncodingFormat[]{ }, 
+                                notifyUri: new Uri("http://www.yahoo.com"));
             });
         }
 
