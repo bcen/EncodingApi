@@ -1,6 +1,5 @@
 using System;
 using Xunit;
-using EncodingApi;
 
 namespace EncodingApi.Test
 {
@@ -14,29 +13,30 @@ namespace EncodingApi.Test
         }
 
         [Fact]
-        public void TestGetMediaListException()
-        {
-            Assert.Throws<EncodingServiceException>(() =>
-            {
-                client.GetMediaList();
-            });
-        }
-
-        [Fact]
-        public void TestSendGetMediaList()
-        {
-            var response = client.SendGetMediaListRequest();
-            Assert.NotEmpty(response.Errors);
-        }
-
-        [Fact]
-        public void TestNoAuth()
+        public void TestNullIdAndKey()
         {
             client.UserId = null;
             client.UserKey = null;
-            Assert.Throws<EncodingServiceException>(() =>
+
+            try
             {
                 client.SendGetMediaListRequest();
+            }
+            catch (EncodingServiceException ex)
+            {
+                Assert.Equal("UserId or UserKey is empty", ex.Message);
+            }
+        }
+
+        [Fact]
+        public void TestGetMediaListException()
+        {
+            client.UserId = "invalid_id";
+            client.UserKey = "invalid_key";
+
+            Assert.Throws<EncodingServiceException>(() =>
+            {
+                client.GetMediaList();
             });
         }
 
