@@ -1,42 +1,45 @@
 # EncodingApi (Work in progress)
-#### A .NET C# client wrapper for the [encoding.com](http://www.encoding.com/) API
 
-This is a preview of the API, all public APIs are subjected to change.
+## Introduction
+EncodingApi is a .NET C# client wrapper for the [encoding.com](http://www.encoding.com/) API.
+It allows users to interact with [encoding.com]http://www.encoding.com/) API in an object oriented way.
 
-Click [here](http://www.encoding.com/api/category/category/complete_api_documentation) for complete documentation.
+Current release is a preview of the API; all public APIs are subjected to change without notice.
+
+Click [here](http://www.encoding.com/api/category/category/complete_api_documentation) for the complete official XML API documentation.
 
 
 ## Example
 
-Gets a list of media:
-
-    EncodingServiceClient client = new EncodingServiceClient("id", "key");
-
-    foreach (var m in client.GetMediaList())
-    {
-        Console.WriteLine(m.MediaId);
-    }
+Creating a client object with user id and uer key:
     
-or do it in the raw way:
-
-    var response = client.SendGetMediaListRequest();
+    EncodingServiceClient client = new EncodingServiceClient("id", "key");
     
-    foreach (var m in response.MediaList)
+Getting a list of media:
+
+    try
     {
-        Console.WriteLine(m.MediaId);
+        foreach (var m in client.GetMediaList())
+        {
+            Console.WriteLine(m.MediaId);
+        }
+    }
+    catch (EncodingServiceException ex)
+    {
+        Console.WriteLine(ex.Message);
     }
 
-it also can be done asynchronously:
+    // or getting it asynchronously
 
-    EncodingServiceClient client = new EncodingServiceClient("id", "key");
-
-    client.GetMediaListAsync((mediaList) =>
+    client.GetMediaListAsync(
+    (mediaList) =>
     {
         foreach (var m in mediaList)
         {
             Console.WriteLine(m.MediaFile);
         }
-    }, (errors) =>
+    },
+    (errors) =>
     {
         foreach (var msg in errors)
         {
