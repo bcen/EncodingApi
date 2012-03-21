@@ -34,6 +34,7 @@ namespace EncodingApi.Test
             </query>";
             string actualXml = Serialize(qry1, "    ");
 
+            // FIXIT: Mono ignores 'ShouldSerializeXXX' pattern.
             Assert.Equal(expectedXml.Replace(" ", String.Empty), 
                          actualXml.Replace(" ", String.Empty));
         }
