@@ -88,6 +88,18 @@ namespace EncodingApi
             return result.MediaList;
         }
 
+        /// <summary>
+        /// Adds media from the specified sources with the formats to the server for encoding.
+        /// </summary>
+        /// <param name="sources">List of Uri of source to be added for endcoding.</param>
+        /// <param name="formats">List of format query for the sources.</param>
+        /// <param name="isInstant">To test whether the process should start immediately or not.
+        /// </param>
+        /// <param name="notifyUri">
+        /// The xml callback Uri address for notification. 
+        /// It could be a valid email mailto address.
+        /// </param>
+        /// <returns>The added media id.</returns>
         public int AddMedia(IEnumerable<Uri> sources, IEnumerable<EncodingFormat> formats,
                             bool isInstant=false, Uri notifyUri=null)
         {
