@@ -14,7 +14,7 @@ namespace EncodingApi.Test
         }
 
         [Fact]
-        public void TestGetMediaListException()
+        public void SyncClientShouldThrowExceptionWithInvalidCredential()
         {
             client.UserId = "invalid_id";
             client.UserKey = "invalid_key";
@@ -28,6 +28,38 @@ namespace EncodingApi.Test
             {
                 client.AddMedia(new Uri[]{ }, new EncodingFormat[]{ }, 
                                 notifyUri: new Uri("http://www.yahoo.com"));
+            });
+        }
+
+        [Fact]
+        public void AsyncClientShouldNotThrowExceptionWithInvalidCredential()
+        {
+            client.UserId = "invalid_id";
+            client.UserKey = "invalid_key";
+
+            Assert.DoesNotThrow(() =>
+            {
+                client.GetMediaListAsync(
+                (mediaList) =>
+                {
+                },
+                (errors) =>
+                {
+                });
+            });
+
+            Uri[] sources = new Uri[]{};
+            EncodingFormat[] formats = new EncodingFormat[]{};
+
+            Assert.DoesNotThrow(() =>
+            {
+                client.AddMediaAsync(sources, formats,
+                (mediaId) =>
+                {
+                },
+                (errors) =>
+                {
+                });
             });
         }
 
