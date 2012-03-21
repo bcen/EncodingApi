@@ -2,7 +2,7 @@
 
 ## Introduction
 EncodingApi is a .NET C# client wrapper for the [encoding.com](http://www.encoding.com/) API.
-It allows users to interact with [encoding.com]http://www.encoding.com/) API in an object oriented way.
+It allows users to interact with [encoding.com](http://www.encoding.com/) API in an object oriented way.
 
 Current release is a preview of the API; all public APIs are subjected to change without notice.
 
