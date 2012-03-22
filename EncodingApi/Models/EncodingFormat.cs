@@ -19,11 +19,63 @@ namespace EncodingApi.Models
         public string Output { get; set; }
 
         /// <summary>
+        /// The video codec of the output.
+        /// </summary>
+        [XmlElement("video_codec")]
+        public string VideoCodec { get; set; }
+
+        /// <summary>
+        /// The audio codec of the output. If you specify AudioCodec equal to 'copy',
+        /// the options AudioChannelsNumber, AudioSampleRate, AudioBitrate will be
+        /// ignored and their values will be copied from your source file.
+        /// </summary>
+        [XmlElement("audio_codec")]
+        public string AudioCodec { get; set; }
+
+        /// <summary>
+        /// The video bitrate of the output.
+        /// </summary>
+        [XmlElement("bitrate")]
+        public string Bitrate { get; set; }
+
+        /// <summary>
+        /// The audio bitrate of the output.
+        /// </summary>
+        [XmlElement("audio_bitrate")]
+        public string AudioBitrate { get; set; }
+
+        /// <summary>
+        /// The audio sample rate of the output.
+        /// </summary>
+        [XmlElement("audio_sample_rate")]
+        public int? AudioSampleRate { get; set; }
+
+        /// <summary>
+        /// The audio volume of the output in percentage.
+        /// </summary>
+        [XmlElement("audio_volume")]
+        public int? AudioVolume { get; set; }
+
+        /// <summary>
         /// Video frame size. Do not call the property directly, instead use
         /// GetVideoFrameSize and SetVideoFrameSize to mutate this property.
         /// </summary>
         [XmlElement("size")]
         public string Size { get; set; }
+
+        /// <summary>
+        /// The fade in effect parameter of the output.
+        /// Add fade in effect to audio and video streams.
+        /// </summary>
+        [XmlElement("fade_in")]
+        public string FadeIn { get; set; }
+
+        /// <summary>
+        /// The fade out effect parameter of the output.
+        /// Add fade out effect to audio and video streams.
+        /// </summary>
+        [XmlElement("fade_out")]
+        public string FadeOut { get; set; }
 
         /// <summary>
         /// To test whether to serialize NoiseReduction or not.
@@ -38,10 +90,58 @@ namespace EncodingApi.Models
         public bool ShouldSerializeOutput() { return !String.IsNullOrEmpty(Output); }
 
         /// <summary>
+        /// To test whether to serialize VideoCodec or not.
+        /// </summary>
+        /// <returns>True if VideoCodec is not null nor empty string, otherwise false.</returns>
+        public bool ShouldSerializeVideoCodec() { return !String.IsNullOrEmpty(VideoCodec); }
+
+        /// <summary>
+        /// To test whether to serialize AudioCodec or not.
+        /// </summary>
+        /// <returns>True if AudioCodec is not null nor empty string, otherwise false.</returns>
+        public bool ShouldSerializeAudioCodec() { return !String.IsNullOrEmpty(AudioCodec); }
+
+        /// <summary>
+        /// To test whether to serialize Bitrate or not.
+        /// </summary>
+        /// <returns>True if Bitrate is not null nor empty string, otherwise false.</returns>
+        public bool ShouldSerializeBitrate() { return !String.IsNullOrEmpty(Bitrate); }
+
+        /// <summary>
+        /// To test whether to serialize AudioBitrate or not.
+        /// </summary>
+        /// <returns>True if AudioBitrate is not null nor empty string, otherwise false.</returns>
+        public bool ShouldSerializeAudioBitrate() { return !String.IsNullOrEmpty(AudioBitrate); }
+
+        /// <summary>
+        /// To test whether to serialize AudioSampleRate or not.
+        /// </summary>
+        /// <returns>True if AudioSampleRate is assigned with a value, otherwise false.</returns>
+        public bool ShouldSerializeAudioSampleRate() { return AudioSampleRate.HasValue; }
+
+        /// <summary>
+        /// To test whether to serialize AudioVolume or not.
+        /// </summary>
+        /// <returns>True if AudioVolume is assigned with a value, otherwise false.</returns>
+        public bool ShouldSerializeAudioVolume() { return AudioVolume.HasValue; }
+
+        /// <summary>
         /// To test whether to serialize Size or not.
         /// </summary>
         /// <returns>True if Size is not null nor empty string, otherwise false.</returns>
         public bool ShouldSerializeSize() { return !String.IsNullOrEmpty(Size); }
+
+        /// <summary>
+        /// To test whether to serialize FadeIn or not.
+        /// </summary>
+        /// <returns>True if FadeIn is not null nor empty string, otherwise false.</returns>
+        public bool ShouldSerializeFadeIn() { return !String.IsNullOrEmpty(FadeIn); }
+
+        /// <summary>
+        /// To test whether to serialize FadeOut or not.
+        /// </summary>
+        /// <returns>True if FadeOut is not null nor empty string, otherwise false.</returns>
+        public bool ShouldSerializeFadeOut() { return !String.IsNullOrEmpty(FadeOut); }
 
         /// <summary>
         /// Default constructor.
@@ -59,6 +159,12 @@ namespace EncodingApi.Models
         {
             Output = output;
             Size = String.Empty;
+            VideoCodec = String.Empty;
+            AudioCodec = String.Empty;
+            Bitrate = String.Empty;
+            AudioBitrate = String.Empty;
+            FadeIn = String.Empty;
+            FadeOut = String.Empty;
         }
 
         /// <summary>
@@ -101,6 +207,118 @@ namespace EncodingApi.Models
             }
             return vfSize;
         }
+
+        /// <summary>
+        /// Sets the video bitrate of the output.
+        /// </summary>
+        /// <param name="bitrate">The bitrate of the output.</param>
+        public void SetVideoBitrate(int bitrate)
+        {
+            if (bitrate == 0)
+                throw new ArgumentException("bitrate must be non-zero integer.");
+
+            Bitrate = String.Format("{0}k", bitrate);
+        }
+
+        /// <summary>
+        /// Gets the video bitrate of the output.
+        /// </summary>
+        /// <returns>The bitrate of the output.</returns>
+        public int GetVideoBitrate()
+        {
+            string[] tokens = Bitrate.Split('k', 'K');
+            int bitrate = Convert.ToInt32(tokens[0]);
+            return bitrate;
+        }
+
+        /// <summary>
+        /// Sets the audio bitrate of the output.
+        /// </summary>
+        /// <param name="bitrate">The new bitrate of the output.</param>
+        public void SetAudioBitrate(double bitrate)
+        {
+            if (bitrate == 0D)
+                throw new ArgumentException("bitrate cannot be zero.");
+
+            AudioBitrate = String.Format("{0}k", bitrate);
+        }
+
+        /// <summary>
+        /// Gets the audio bitrate of the output.
+        /// </summary>
+        /// <returns>The bitrate of the output.</returns>
+        public double GetAudioBitrate()
+        {
+            string[] tokens = AudioBitrate.Split('k', 'K');
+            double bitrate = Convert.ToDouble(tokens[0]);
+            return bitrate;
+        }
+
+        /// <summary>
+        /// Sets the fade in time parameters.
+        /// </summary>
+        /// <param name="param">The new effect time parameters.</param>
+        public void SetFadeInTime(EffectTimeParameters param)
+        {
+            if (param.Start < 0D || param.Duration < 0D)
+                throw new ArgumentException("Start time and duration cannot be less than 0.");
+
+            FadeIn = String.Format("{0}:{1}", param.Start, param.Duration);
+        }
+
+        /// <summary>
+        /// Sets the fade in time parameters.
+        /// </summary>
+        /// <param name="start">The fade in start time in seconds.</param>
+        /// <param name="duration">The fade in duration in seconds.</param>
+        public void SetFadeInTime(double start, double duration)
+        {
+            SetFadeInTime(new EffectTimeParameters(start, duration));
+        }
+
+        /// <summary>
+        /// Gets the fade in time parameters.
+        /// </summary>
+        /// <returns>The fade in time parameters of the output.</returns>
+        public EffectTimeParameters GetFadeInTime()
+        {
+            string[] tokens = FadeIn.Split(':');
+            return new EffectTimeParameters(Convert.ToDouble(tokens[0]),
+                                            Convert.ToDouble(tokens[1]));
+        }
+
+        /// <summary>
+        /// Sets the fade out time parameters.
+        /// </summary>
+        /// <param name="param">The new effect time parameters.</param>
+        public void SetFadeOutTime(EffectTimeParameters param)
+        {
+            if (param.Start < 0D || param.Duration < 0D)
+                throw new ArgumentException("Start time and duration cannot be less than 0.");
+
+            FadeOut = String.Format("{0}:{1}", param.Start, param.Duration);
+        }
+
+        /// <summary>
+        /// Sets the fade out time parameters.
+        /// </summary>
+        /// <param name="start">The fade out start time in seconds.</param>
+        /// <param name="duration">The fade out duration in seconds.</param>
+        public void SetFadeOutTime(double start, double duration)
+        {
+            SetFadeOutTime(new EffectTimeParameters(start, duration));
+        }
+
+        /// <summary>
+        /// Gets the fade out time parameters.
+        /// </summary>
+        /// <returns>The fade in time parameters of the output.</returns>
+        public EffectTimeParameters GetFadeOutTime()
+        {
+            string[] tokens = FadeOut.Split(':');
+            return new EffectTimeParameters(Convert.ToDouble(tokens[0]),
+                                            Convert.ToDouble(tokens[1]));
+        }
     }
 
     /// <summary>
@@ -134,6 +352,37 @@ namespace EncodingApi.Models
         {
             Width = width;
             Height = height;
+        }
+    }
+
+    public class EffectTimeParameters
+    {
+        /// <summary>
+        /// The fade in/out start time in seconds.
+        /// </summary>
+        public double Start { get; set; }
+
+        /// <summary>
+        /// The fade in/out duration in seconds.
+        /// </summary>
+        public double Duration { get; set; }
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public EffectTimeParameters()
+        {
+        }
+
+        /// <summary>
+        /// Initializes the FadeInEffect class with the specified start time and duration.
+        /// </summary>
+        /// <param name="start">The start time in seconds of the fade in/out effect.</param>
+        /// <param name="duration">The duration in seconds of the fade in/out effect.</param>
+        public EffectTimeParameters(double start, double duration)
+        {
+            Start = start;
+            Duration = duration;
         }
     }
 }
