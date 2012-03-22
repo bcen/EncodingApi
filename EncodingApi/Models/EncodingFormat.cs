@@ -33,13 +33,15 @@ namespace EncodingApi.Models
         public string AudioCodec { get; set; }
 
         /// <summary>
-        /// The video bitrate of the output.
+        /// The video bitrate of the output. Note: Please use GetVideoBitrate/SetVideoBitrate to
+        /// modify this property correctly.
         /// </summary>
         [XmlElement("bitrate")]
         public string Bitrate { get; set; }
 
         /// <summary>
-        /// The audio bitrate of the output.
+        /// The audio bitrate of the output. Note: Please use GetAudioBitrate/SetAudioBitrate to
+        /// modify this property correctly.
         /// </summary>
         [XmlElement("audio_bitrate")]
         public string AudioBitrate { get; set; }
@@ -57,8 +59,8 @@ namespace EncodingApi.Models
         public int? AudioVolume { get; set; }
 
         /// <summary>
-        /// Video frame size. Do not call the property directly, instead use
-        /// GetVideoFrameSize and SetVideoFrameSize to mutate this property.
+        /// Video frame size. Note: Please use
+        /// GetVideoFrameSize/SetVideoFrameSize to modify this property correctly.
         /// </summary>
         [XmlElement("size")]
         public string Size { get; set; }
@@ -66,6 +68,7 @@ namespace EncodingApi.Models
         /// <summary>
         /// The fade in effect parameter of the output.
         /// Add fade in effect to audio and video streams.
+        /// Note: Please use GetFadeInTime/SetFadeInTime to modify this property correctly.
         /// </summary>
         [XmlElement("fade_in")]
         public string FadeIn { get; set; }
@@ -73,6 +76,7 @@ namespace EncodingApi.Models
         /// <summary>
         /// The fade out effect parameter of the output.
         /// Add fade out effect to audio and video streams.
+        /// Note: Please use GetFadeOutTime/SetFadeOutTime to modify this property correctly.
         /// </summary>
         [XmlElement("fade_out")]
         public string FadeOut { get; set; }
@@ -170,8 +174,8 @@ namespace EncodingApi.Models
         /// <summary>
         /// Sets the video frame size with the specified width and height.
         /// </summary>
-        /// <param name="width">The width of the new video frame size.</param>
-        /// <param name="height">The hheight of the new video frame size.</param>
+        /// <param name="width">The width of the new video frame size, where the width must be an even integer.</param>
+        /// <param name="height">The height of the new video frame size, where the height must be an even integer.</param>
         public void SetVideoFrameSize(int width, int height)
         {
             SetVideoFrameSize(new VideoFrameSize(width, height));
@@ -211,7 +215,8 @@ namespace EncodingApi.Models
         /// <summary>
         /// Sets the video bitrate of the output.
         /// </summary>
-        /// <param name="bitrate">The bitrate of the output.</param>
+        /// <param name="bitrate">The new bitrate of the output, where bitrate must be a non-zero
+        /// integer.</param>
         public void SetVideoBitrate(int bitrate)
         {
             if (bitrate == 0)
@@ -234,7 +239,8 @@ namespace EncodingApi.Models
         /// <summary>
         /// Sets the audio bitrate of the output.
         /// </summary>
-        /// <param name="bitrate">The new bitrate of the output.</param>
+        /// <param name="bitrate">The new bitrate of the output, where bitrate must be a non-zero
+        /// integer.</param>
         public void SetAudioBitrate(double bitrate)
         {
             if (bitrate == 0D)
