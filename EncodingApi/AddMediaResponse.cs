@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
+using System.Xml;
+using EncodingApi.Extensions;
 
 namespace EncodingApi
 {
@@ -12,14 +14,7 @@ namespace EncodingApi
         /// <summary>
         /// The ID of the added media.
         /// </summary>
-        [XmlElement("MediaID")]
         public string MediaId { get; set; }
-
-        /// <summary>
-        /// To test whether to serialize MediaId or not.
-        /// </summary>
-        /// <returns>True if MediaId is not null nor empty string, otherwise false.</returns>
-        public bool ShouldSerializeMediaId() { return !String.IsNullOrEmpty(MediaId); }
 
         /// <summary>
         /// Default constructor.
@@ -27,6 +22,13 @@ namespace EncodingApi
         public AddMediaResponse()
         {
             MediaId = String.Empty;
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            writer.WriteSafeElementString("mediaid", MediaId);
         }
     }
 }

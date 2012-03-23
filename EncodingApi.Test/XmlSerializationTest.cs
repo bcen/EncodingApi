@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -70,6 +71,55 @@ namespace EncodingApi.Test
 
             Assert.Equal(expectXml.Replace(" ", String.Empty).Replace(Environment.NewLine, String.Empty),
                          actualXml.Replace(" ", String.Empty).Replace(Environment.NewLine, String.Empty));
+
+
+
+            BasicResponseMock r = new BasicResponseMock()
+            {
+                Message = "Some messages",
+                Errors = new List<string>()
+                {
+                    "error 1",
+                    "error 2"
+                },
+                MockTest = "mock object"
+            };
+
+            expectXml =
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
+            <response>
+                <message>Some messages</message>
+                <errors>
+                    <error>error 1</error>
+                    <error>error 2</error>
+                </errors>
+                <mock>mock object</mock>
+            </response>";
+            actualXml = Serialize(r, "    ");
+
+            Assert.Equal(expectXml.Replace(" ", String.Empty).Replace(Environment.NewLine, String.Empty),
+                         actualXml.Replace(" ", String.Empty).Replace(Environment.NewLine, String.Empty));
+
+
+
+            AddMediaResponse ar = new AddMediaResponse
+            {
+                MediaId = "1234",
+                Message = "Added"
+            };
+
+            expectXml =
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
+            <response>
+                <message>Added</message>
+                <mediaid>1234</mediaid>
+            </response>";
+            actualXml = Serialize(ar, "    ");
+
+
+            Assert.Equal(expectXml.Replace(" ", String.Empty).Replace(Environment.NewLine, String.Empty),
+                         actualXml.Replace(" ", String.Empty).Replace(Environment.NewLine, String.Empty));
+
         }
 
         [Fact]
@@ -122,6 +172,19 @@ namespace EncodingApi.Test
 
             Assert.NotNull(f2);
             Assert.Equal("mp3", f2.Output);
+
+
+            xml =
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
+            <response>
+                <message>Added</message>
+                <mediaid>1234</mediaid>
+            </response>";
+
+            BasicResponseMock r = Deserialize<BasicResponseMock>(xml);
+
+            Assert.NotNull(r);
+            Assert.Equal("Added", r.Message);
         }
 
         public virtual string Serialize<T>(T obj, string indentChars) where T : class, new()

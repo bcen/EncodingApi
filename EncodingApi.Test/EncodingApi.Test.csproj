@@ -40,6 +40,7 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="XmlSerializationTest.cs" />
     <Compile Include="EncodingServiceClientTest.cs" />
+    <Compile Include="BasicResponseMock.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EncodingApi\EncodingApi.csproj">
