@@ -141,10 +141,13 @@ namespace EncodingApi
                 {
                     using (XmlReader r = item.CreateReader())
                     {
-                        r.MoveToContent();
                         EncodingFormat f = new EncodingFormat();
-                        f.ReadXml(r);
-                        Formats.Add(f);
+                        if (f is IXmlSerializable)
+                        {
+                            r.MoveToContent();
+                            ((IXmlSerializable)f).ReadXml(r);
+                            Formats.Add(f);
+                        }
                     }
                 }
             }
@@ -186,7 +189,7 @@ namespace EncodingApi
                     if (f is IXmlSerializable)
                     {
                         writer.WriteStartElement("format");
-                        f.WriteXml(writer);
+                        ((IXmlSerializable)f).WriteXml(writer);
                         writer.WriteEndElement();
                     }
                 }

@@ -81,12 +81,12 @@ namespace EncodingApi
             AudioSampleRate = 0;
         }
 
-        public System.Xml.Schema.XmlSchema GetSchema()
+        System.Xml.Schema.XmlSchema IXmlSerializable.GetSchema()
         {
             return null;
         }
 
-        public void ReadXml(XmlReader reader)
+        void IXmlSerializable.ReadXml(XmlReader reader)
         {
             XElement root = XElement.ReadFrom(reader) as XElement;
             if (root == null) return;
@@ -131,7 +131,7 @@ namespace EncodingApi
             }
         }
 
-        public void WriteXml(XmlWriter writer)
+        void IXmlSerializable.WriteXml(XmlWriter writer)
         {
             if (NoiseReduction >= 0)
             {
