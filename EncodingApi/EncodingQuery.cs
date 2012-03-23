@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using EncodingApi.Extensions;
 
 namespace EncodingApi
 {
@@ -71,6 +72,14 @@ namespace EncodingApi
             Notify = null;
             IsInstant = false;
             Formats = new List<EncodingFormat>();
+        }
+
+        public static EncodingQuery CreateGetMediaListQuery()
+        {
+            return new EncodingQuery()
+            {
+                Action = EncodingQuery.QueryAction.GetMediaList,
+            };
         }
 
         public System.Xml.Schema.XmlSchema GetSchema()
@@ -182,6 +191,24 @@ namespace EncodingApi
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// A convenience class to look up availiable query actions.
+        /// </summary>
+        public static class QueryAction
+        {
+            public readonly static string AddMedia = "AddMedia";
+            public readonly static string AddMediaBenchmark = "AddMediaBenchmark";
+            public readonly static string UpdateMedia = "UpdateMedia";
+            public readonly static string ProcessMedia = "ProcessMedia";
+            public readonly static string CancelMedia = "CancelMedia";
+            public readonly static string GetMediaList = "GetMediaList";
+            public readonly static string GetStatus = "GetStatus";
+            public readonly static string GetMediaInfo = "GetMediaInfo";
+            public readonly static string RestartMedia = "RestartMedia";
+            public readonly static string RestartMediaErrors = "RestartMediaErrors";
+            public readonly static string RestartMediaTask = "RestartMediaTask";
         }
     }
 }

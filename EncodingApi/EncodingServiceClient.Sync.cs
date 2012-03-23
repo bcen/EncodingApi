@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using EncodingApi.Models;
 
 namespace EncodingApi
 {
@@ -109,15 +108,12 @@ namespace EncodingApi
             EncodingQuery query = new EncodingQuery();
             query.Action = EncodingQuery.QueryAction.AddMedia;
             query.Formats = formats.ToList();
-            query.SetNotifyUri(notifyUri);
+            query.Notify = notifyUri;
             foreach (Uri uri in sources)
             {
-                query.AddSourceUri(uri);
+                query.Sources.Add(uri);
             }
-            if (isInstant)
-            {
-                query.TurnOnInstantProcess();
-            }
+            query.IsInstant = isInstant;
             
             var result = GetResponse<AddMediaResponse>(query);
             if (result.Errors.Count > 0)

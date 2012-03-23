@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using EncodingApi.Models;
+using System.Collections.Generic;
 using Xunit;
 
 namespace EncodingApi.Test
@@ -14,58 +14,56 @@ namespace EncodingApi.Test
         [Fact]
         public void TestSerialization()
         {
-            EncodingQuery qry1 = new EncodingQuery();
-            qry1.Action = EncodingQuery.QueryAction.ProcessMedia;
-            qry1.UserId = "123";
-            qry1.UserKey = "321";
-            qry1.AddSourceUri("http://www.yahoo.com/test");
-            qry1.Formats.Add(new EncodingFormat("mp4"));
+            EncodingQuery q = new EncodingQuery()
+            {
+                UserId = "id",
+                UserKey = "key",
+                Action = "GetMediaList",
+                MediaId = "1234",
+                Notify = new Uri("mailto://someone@gmail.com"),
+                IsInstant = true,
+                Sources = new List<Uri>()
+                {
+                    new Uri("http://www.google.com/example1.mp3"),
+                    new Uri("http://www.facebook.com/example2.flv")
+                },
+                Formats = new List<EncodingFormat>()
+                {
+                    new EncodingFormat()
+                    {
+                        Output = "flv",
+                        NoiseReduction = 3,
+                        AudioSampleRate = 0
+                    }
+                }
+            };
 
-            string expectedXml =
+            string expectXml =
             @"<?xml version=""1.0"" encoding=""utf-8""?>
             <query>
-                <userid>123</userid>
-                <userkey>321</userkey>
-                <action>ProcessMedia</action>
-                <source>http://www.yahoo.com/test</source>
+                <userid>id</userid>
+                <userkey>key</userkey>
+                <action>GetMediaList</action>
+                <mediaid>1234</mediaid>
+                <source>http://www.google.com/example1.mp3</source>
+                <source>http://www.facebook.com/example2.flv</source>
+                <notify>mailto://someone@gmail.com</notify>
+                <instant>yes</instant>
                 <format>
-                    <output>mp4</output>
+                    <noise_reduction>3</noise_reduction>
+                    <output>flv</output>
                 </format>
             </query>";
-            string actualXml = Serialize(qry1, "    ");
+            string actualXml = Serialize(q, "    ");
 
-            // FIXIT: Mono ignores 'ShouldSerializeXXX' pattern.
-            Assert.Equal(expectedXml.Replace(" ", String.Empty), 
-                         actualXml.Replace(" ", String.Empty));
+            Assert.Equal(expectXml.Replace(" ", String.Empty).Replace(Environment.NewLine, String.Empty),
+                         actualXml.Replace(" ", String.Empty).Replace(Environment.NewLine, String.Empty));
         }
 
         [Fact]
         public void TestDeserialization()
         {
-            string xml =
-            @"<?xml version=""1.0"" encoding=""utf-8""?>
-            <query>
-                <userid>7778</userid>
-                <userkey>longkey</userkey>
-                <action>AddMedia</action>
-                <mediaid>1234</mediaid>
-                <source>http://www.yahoo.com/mp4</source>
-                <notify>http://callback.com/callback</notify>
-                <format>
-                    <output>mp4</output>
-                </format>
-            </query>";
 
-            EncodingQuery qry1 = Deserialize<EncodingQuery>(xml);
-            Assert.NotNull(qry1);
-            Assert.Equal("7778", qry1.UserId);
-            Assert.Equal("longkey", qry1.UserKey);
-            Assert.Equal("AddMedia", qry1.Action);
-            Assert.Equal("1234", qry1.MediaId);
-            Assert.Contains(new Uri("http://www.yahoo.com/mp4"), qry1.GetAllSourceUri());
-            Assert.Equal(new Uri("http://callback.com/callback"), qry1.GetNotifyUri());
-            Assert.NotEmpty(qry1.Formats);
-            Assert.Equal("mp4", qry1.Formats.First().Output);
         }
 
         public virtual string Serialize<T>(T obj, string indentChars) where T : class, new()

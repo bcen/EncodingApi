@@ -1,6 +1,5 @@
 using System;
 using Xunit;
-using EncodingApi.Models;
 
 namespace EncodingApi.Test
 {

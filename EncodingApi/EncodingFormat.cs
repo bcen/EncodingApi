@@ -2,6 +2,7 @@
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using EncodingApi.Extensions;
 
 namespace EncodingApi
 {
@@ -90,15 +91,15 @@ namespace EncodingApi
             XElement root = XElement.ReadFrom(reader) as XElement;
             if (root == null) return;
 
-            var elem = root.Element("output");
-            Output = elem != null ? elem.Value : String.Empty;
-
-            elem = root.Element("noise_reduction");
+            var elem = root.Element("noise_reduction");
             if (elem != null)
             {
                 int tmp;
                 NoiseReduction = Int32.TryParse(elem.Value, out tmp) ? tmp : -1;
             }
+
+            elem = root.Element("output");
+            Output = elem != null ? elem.Value : String.Empty;
 
             elem = root.Element("video_codec");
             VideoCodec = elem != null ? elem.Value : String.Empty;
@@ -132,12 +133,12 @@ namespace EncodingApi
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteSafeElementString("output", Output);
-
             if (NoiseReduction >= 0)
             {
                 writer.WriteSafeElementString("noise_reduction", Convert.ToString(NoiseReduction));
             }
+
+            writer.WriteSafeElementString("output", Output);
 
             writer.WriteSafeElementString("video_codec", VideoCodec);
 

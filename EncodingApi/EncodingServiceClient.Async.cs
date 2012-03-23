@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using EncodingApi.Models;
 using System.Linq;
 
 namespace EncodingApi
@@ -43,15 +42,12 @@ namespace EncodingApi
             EncodingQuery query = new EncodingQuery();
             query.Action = EncodingQuery.QueryAction.AddMedia;
             query.Formats = formats.ToList();
-            query.SetNotifyUri(notifyUri);
+            query.Notify = notifyUri;
             foreach (Uri uri in sources)
             {
-                query.AddSourceUri(uri);
+                query.Sources.Add(uri);
             }
-            if (isInstant)
-            {
-                query.TurnOnInstantProcess();
-            }
+            query.IsInstant = isInstant;
 
             GetResponseAsync<AddMediaResponse>(query, (response) =>
             {
