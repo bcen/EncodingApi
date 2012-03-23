@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -42,11 +42,12 @@
     <Compile Include="AddMediaResponse.cs" />
     <Compile Include="BasicXmlWebServiceClient.cs" />
     <Compile Include="BasicResponse.cs" />
+    <Compile Include="EncodingFormat.cs" />
+    <Compile Include="EncodingQuery.cs" />
     <Compile Include="EncodingServiceClient.Async.cs" />
     <Compile Include="EncodingServiceClient.Sync.cs" />
-    <Compile Include="Models\EncodingQuery.cs" />
+    <Compile Include="Extensions\XmlWriterExtensions.cs" />
     <Compile Include="EncodingServiceException.cs" />
-    <Compile Include="Models\EncodingFormat.cs" />
     <Compile Include="GetMediaListResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
