@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -30,6 +30,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="xunit">
       <HintPath>..\Libs\xunit\xunit.dll</HintPath>
     </Reference>
@@ -40,7 +41,6 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="XmlSerializationTest.cs" />
     <Compile Include="EncodingServiceClientTest.cs" />
-    <Compile Include="BasicResponseMock.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EncodingApi\EncodingApi.csproj">
