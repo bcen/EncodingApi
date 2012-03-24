@@ -99,8 +99,8 @@ namespace EncodingApi
         /// It could be a valid email mailto address.
         /// </param>
         /// <returns>The added media id.</returns>
-        public int AddMedia(IEnumerable<Uri> sources, IEnumerable<EncodingFormat> formats,
-                            bool isInstant=false, Uri notifyUri=null)
+        public string AddMedia(IEnumerable<Uri> sources, IEnumerable<EncodingFormat> formats,
+                               bool isInstant=false, Uri notifyUri=null)
         {
             if (sources == null || formats == null)
                 throw new ArgumentNullException("sources or formats cannot be null.");
@@ -124,7 +124,7 @@ namespace EncodingApi
                 throw ex;
             }
 
-            return Convert.ToInt32(result.MediaId);
+            return result.MediaId;
         }
     }
 }
