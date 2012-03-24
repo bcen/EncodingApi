@@ -136,13 +136,12 @@ namespace EncodingApi
                 {
                     Formats = new List<EncodingFormat>();
                 }
-
                 foreach (var item in s)
                 {
-                    using (XmlReader r = item.CreateReader())
+                    EncodingFormat f = new EncodingFormat();
+                    if (f is IXmlSerializable)
                     {
-                        EncodingFormat f = new EncodingFormat();
-                        if (f is IXmlSerializable)
+                        using (XmlReader r = item.CreateReader())
                         {
                             r.MoveToContent();
                             ((IXmlSerializable)f).ReadXml(r);

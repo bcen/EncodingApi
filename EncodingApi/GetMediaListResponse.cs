@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Linq;
-using System.Globalization;
+using System.Xml.Serialization;
 using EncodingApi.Extensions;
 
 namespace EncodingApi
@@ -27,13 +27,33 @@ namespace EncodingApi
             MediaList = new List<Media>();
         }
 
-        public override void Parse(XElement root)
+        protected override void Parse(XElement root)
         {
             if (root == null) return;
 
             base.Parse(root);
 
-
+            var elems = root.Elements("media");
+            if (elems != null)
+            {
+                if (MediaList == null)
+                {
+                    MediaList = new List<Media>();
+                }
+                foreach (var item in elems)
+                {
+                    Media m = new Media();
+                    if (m is IXmlSerializable)
+                    {
+                        using (XmlReader r = item.CreateReader())
+                        {
+                            r.MoveToContent();
+                            ((IXmlSerializable)m).ReadXml(r);
+                            MediaList.Add(m);
+                        }
+                    }
+                }
+            }
         }
 
         public override void ReadXml(XmlReader reader)
@@ -114,12 +134,55 @@ namespace EncodingApi
                 return null;
             }
 
-            public void Parse(XElement root)
-            {
-            }
-
             void IXmlSerializable.ReadXml(XmlReader reader)
             {
+                XElement root = XElement.ReadFrom(reader) as XElement;
+                if (root == null) return;
+
+                // Reads <mediafile></mediafile>
+                var elem = root.Element("mediafile");
+                MediaFile = elem != null ? new Uri(elem.Value) : null;
+
+                // Reads <mediaid></mediaid>
+                elem = root.Element("mediaid");
+                MediaId = elem != null ? elem.Value : String.Empty;
+
+                // Reads <mediastatus></mediastatus>
+                elem = root.Element("mediastatus");
+                MediaStatus = elem != null ? elem.Value : String.Empty;
+
+                
+                DateTime d = DateTime.MinValue;
+                
+                // Reads <createdate></createdate>
+                elem = root.Element("createdate");
+                if (elem != null)
+                {
+                    if (DateTime.TryParse(elem.Value, out d))
+                    {
+                        CreateDate = d;
+                    }
+                }
+
+                // Reads <startdate></startdate>
+                elem = root.Element("startdate");
+                if (elem != null)
+                {
+                    if (DateTime.TryParse(elem.Value, out d))
+                    {
+                        StartDate = d;
+                    }
+                }
+
+                // Reads <finishdate></finishdate>
+                elem = root.Element("finishdate");
+                if (elem != null)
+                {
+                    if (DateTime.TryParse(elem.Value, out d))
+                    {
+                        FinishDate = d;
+                    }
+                }
             }
 
             void IXmlSerializable.WriteXml(XmlWriter writer)

@@ -203,6 +203,36 @@ namespace EncodingApi.Test
             Assert.Equal("1234", ar.MediaId);
             Assert.Equal("Added", ar.Message);
             Assert.Contains("some error", ar.Errors);
+
+            // GetMediaListResponse
+            xml =
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
+            <response>
+                <media>
+                    <mediafile>http://www.example.com/example.mp4</mediafile>
+                    <mediaid>8945307</mediaid>
+                    <mediastatus>Error</mediastatus>
+                    <createdate>2012-03-13 14:53:51</createdate>
+                    <startdate>2012-03-13 14:54:28</startdate>
+                    <finishdate>0000-00-00 00:00:00</finishdate>
+                </media>
+            </response>";
+
+            GetMediaListResponse gr = Deserialize<GetMediaListResponse>(xml);
+
+            Assert.NotNull(ar);
+            Assert.Equal(new Uri("http://www.example.com/example.mp4"), gr.MediaList.First().MediaFile);
+            Assert.Equal("8945307", gr.MediaList.First().MediaId);
+
+            DateTime d = DateTime.MinValue;;
+            DateTime.TryParse("2012-03-13 14:53:51", out d);
+            Assert.Equal(d, gr.MediaList.First().CreateDate);
+
+            DateTime.TryParse("2012-03-13 14:54:28", out d);
+            Assert.Equal(d, gr.MediaList.First().StartDate);
+
+            DateTime.TryParse("0000-00-00 00:00:00", out d);
+            Assert.Equal(d, gr.MediaList.First().FinishDate);
         }
 
         public virtual string Serialize<T>(T obj, string indentChars) where T : class, new()

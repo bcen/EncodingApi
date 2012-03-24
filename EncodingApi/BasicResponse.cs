@@ -37,7 +37,7 @@ namespace EncodingApi
         /// Deserializes the xml from the sepcified XElement into object instance.
         /// </summary>
         /// <param name="root">The XElement to parse from.</param>
-        public virtual void Parse(XElement root)
+        protected virtual void Parse(XElement root)
         {
             if (root == null) return;
 
