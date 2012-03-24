@@ -33,7 +33,7 @@ namespace EncodingApi
         }
 
         public void AddMediaAsync(IEnumerable<Uri> sources, IEnumerable<EncodingFormat> formats,
-                                  Action<int> callback, Action<ICollection<string>> errors,
+                                  Action<string> callback, Action<ICollection<string>> errors,
                                   bool isInstant=false, Uri notifyUri=null)
         {
             if (sources == null || formats == null)
@@ -51,7 +51,7 @@ namespace EncodingApi
 
             GetResponseAsync<AddMediaResponse>(query, (response) =>
             {
-                callback(Convert.ToInt32(response.MediaId));
+                callback(response.MediaId);
                 errors(response.Errors);
             });
         }
