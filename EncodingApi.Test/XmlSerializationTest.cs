@@ -14,6 +14,7 @@ namespace EncodingApi.Test
         [Fact]
         public void TestSerialization()
         {
+            // EncodingQuery
             EncodingQuery q = new EncodingQuery()
             {
                 UserId = "id",
@@ -74,34 +75,7 @@ namespace EncodingApi.Test
 
 
 
-            BasicResponseMock r = new BasicResponseMock()
-            {
-                Message = "Some messages",
-                Errors = new List<string>()
-                {
-                    "error 1",
-                    "error 2"
-                },
-                MockTest = "mock object"
-            };
-
-            expectXml =
-            @"<?xml version=""1.0"" encoding=""utf-8""?>
-            <response>
-                <message>Some messages</message>
-                <errors>
-                    <error>error 1</error>
-                    <error>error 2</error>
-                </errors>
-                <mock>mock object</mock>
-            </response>";
-            actualXml = Serialize(r, "    ");
-
-            Assert.Equal(expectXml.Replace(" ", String.Empty).Replace(Environment.NewLine, String.Empty),
-                         actualXml.Replace(" ", String.Empty).Replace(Environment.NewLine, String.Empty));
-
-
-
+            // AddMediaResponse
             AddMediaResponse ar = new AddMediaResponse
             {
                 MediaId = "1234",
@@ -120,11 +94,50 @@ namespace EncodingApi.Test
             Assert.Equal(expectXml.Replace(" ", String.Empty).Replace(Environment.NewLine, String.Empty),
                          actualXml.Replace(" ", String.Empty).Replace(Environment.NewLine, String.Empty));
 
+
+            
+            // GetMediaListResponse
+            DateTime d;
+            GetMediaListResponse gr = new GetMediaListResponse
+            {
+                Message = "Added some messages",
+                MediaList = new List<GetMediaListResponse.Media>()
+                {
+                    new GetMediaListResponse.Media()
+                    {
+                        MediaFile = new Uri("http://www.example.com/example.mp4"),
+                        MediaId = "8945307",
+                        MediaStatus = "Error",
+                        CreateDate = DateTime.TryParse("2012-03-13 14:53:51", out d) ? d : DateTime.MinValue,
+                        StartDate = DateTime.TryParse("2012-03-13 14:54:28", out d) ? d : DateTime.MinValue,
+                        FinishDate = DateTime.TryParse("0000-00-00 00:00:00", out d) ? d : DateTime.MinValue
+                    }
+                }
+            };
+            expectXml =
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
+            <response>
+                <message>Added some messages</message>
+                <media>
+                    <mediafile>http://www.example.com/example.mp4</mediafile>
+                    <mediaid>8945307</mediaid>
+                    <mediastatus>Error</mediastatus>
+                    <createdate>2012-03-13 14:53:51</createdate>
+                    <startdate>2012-03-13 14:54:28</startdate>
+                    <finishdate>0000-00-00 00:00:00</finishdate>
+                </media>
+            </response>";
+            actualXml = Serialize(gr, "    ");
+
+
+            Assert.Equal(expectXml.Replace(" ", String.Empty).Replace(Environment.NewLine, String.Empty),
+                         actualXml.Replace(" ", String.Empty).Replace(Environment.NewLine, String.Empty));
         }
 
         [Fact]
         public void TestDeserialization()
         {
+            // EncodingQuery
             string xml =
             @"<?xml version=""1.0"" encoding=""utf-8""?>
             <query>
@@ -173,18 +186,23 @@ namespace EncodingApi.Test
             Assert.NotNull(f2);
             Assert.Equal("mp3", f2.Output);
 
-
+            // AddMediaResponse
             xml =
             @"<?xml version=""1.0"" encoding=""utf-8""?>
             <response>
                 <message>Added</message>
                 <mediaid>1234</mediaid>
+                <errors>
+                    <error>some error</error>
+                </errors>
             </response>";
 
-            BasicResponseMock r = Deserialize<BasicResponseMock>(xml);
+            AddMediaResponse ar = Deserialize<AddMediaResponse>(xml);
 
-            Assert.NotNull(r);
-            Assert.Equal("Added", r.Message);
+            Assert.NotNull(ar);
+            Assert.Equal("1234", ar.MediaId);
+            Assert.Equal("Added", ar.Message);
+            Assert.Contains("some error", ar.Errors);
         }
 
         public virtual string Serialize<T>(T obj, string indentChars) where T : class, new()

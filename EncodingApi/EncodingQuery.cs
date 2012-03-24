@@ -82,7 +82,7 @@ namespace EncodingApi
             };
         }
 
-        public System.Xml.Schema.XmlSchema GetSchema()
+        System.Xml.Schema.XmlSchema IXmlSerializable.GetSchema()
         {
             return null;
         }
@@ -91,7 +91,7 @@ namespace EncodingApi
         /// Deserializes the xml from <c>reader</c>.
         /// </summary>
         /// <param name="reader">The XmlReader.</param>
-        public void ReadXml(XmlReader reader)
+        void IXmlSerializable.ReadXml(XmlReader reader)
         {
             XElement root = XElement.ReadFrom(reader) as XElement;
             if (root == null) return;
@@ -157,7 +157,7 @@ namespace EncodingApi
         /// Serializes the object to xml.
         /// </summary>
         /// <param name="writer">The XmlWriter.</param>
-        public void WriteXml(XmlWriter writer)
+        void IXmlSerializable.WriteXml(XmlWriter writer)
         {
             writer.WriteSafeElementString("userid", UserId);
             writer.WriteSafeElementString("userkey", UserKey);

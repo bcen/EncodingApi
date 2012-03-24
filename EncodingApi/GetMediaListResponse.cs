@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using System.Xml;
+using System.Xml.Linq;
+using System.Globalization;
+using EncodingApi.Extensions;
 
 namespace EncodingApi
 {
@@ -8,19 +12,12 @@ namespace EncodingApi
     /// Encapsulates GetMediaList XML response.
     /// </summary>
     [XmlRoot("response")]
-    public class GetMediaListResponse : BasicResponse
+    public sealed class GetMediaListResponse : BasicResponse
     {
         /// <summary>
         /// List of media meta from server.
         /// </summary>
-        [XmlElement("media")]
-        public List<Media> MediaList { get; set; }
-
-        /// <summary>
-        /// To test wether to serialize MediaList or not.
-        /// </summary>
-        /// <returns>True if media list count is greater than zero, otherwise false.</returns>
-        public bool ShouldSerializeMediaList() { return (MediaList.Count > 0); }
+        public ICollection<Media> MediaList { get; set; }
 
         /// <summary>
         /// Default constructor.
@@ -30,159 +27,135 @@ namespace EncodingApi
             MediaList = new List<Media>();
         }
 
+        public override void Parse(XElement root)
+        {
+            if (root == null) return;
+
+            base.Parse(root);
+
+
+        }
+
+        public override void ReadXml(XmlReader reader)
+        {
+            XElement root = XElement.ReadFrom(reader) as XElement;
+            Parse(root);
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            // Writes <media>...</media>
+            if (MediaList != null)
+            {
+                foreach (var m in MediaList)
+                {
+                    if (m is IXmlSerializable)
+                    {
+                        writer.WriteStartElement("media");
+                        ((IXmlSerializable)m).WriteXml(writer);
+                        writer.WriteEndElement();
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Media meta class.
         /// </summary>
-        public class Media
+        public sealed class Media : IXmlSerializable
         {
             /// <summary>
             /// The source URL of the media.
             /// </summary>
-            [XmlElement("mediafile")]
-            public string MediaFile { get; set; }
+            public Uri MediaFile { get; set; }
 
             /// <summary>
             /// The ID of the media.
             /// </summary>
-            [XmlElement("mediaid")]
             public string MediaId { get; set; }
             
             /// <summary>
             /// The status of the media.
             /// </summary>
-            [XmlElement("mediastatus")]
             public string MediaStatus { get; set; }
 
             /// <summary>
             /// The date when the media is first created in the queue.
             /// </summary>
-            [XmlElement("createdate")]
-            public string CreateDate { get; set; }
+            public DateTime CreateDate { get; set; }
 
             /// <summary>
             /// The date when the media is first started in the processing queue.
             /// </summary>
-            [XmlElement("startdate")]
-            public string StartDate { get; set; }
+            public DateTime StartDate { get; set; }
 
             /// <summary>
             /// The date when the media is finished.
             /// </summary>
-            [XmlElement("finishdate")]
-            public string FinishDate { get; set; }
-
-            /// <summary>
-            /// To test whether serialize MediaFile or not.
-            /// </summary>
-            /// <returns>True if MediaFile is not null nor empty string, otherwise false.</returns>
-            public bool ShouldSerializeMediaFile() { return !String.IsNullOrEmpty(MediaFile); }
-
-            /// <summary>
-            /// To test whether serialize MediaId or not.
-            /// </summary>
-            /// <returns>True if MediaId is not null nor empty string, otherwise false.</returns>
-            public bool ShouldSerializeMediaId() { return !String.IsNullOrEmpty(MediaId); }
-
-            /// <summary>
-            /// To test whether serialize MediaStatus or not.
-            /// </summary>
-            /// <returns>True if MediaStatus is not null nor empty string, otherwise false.</returns>
-            public bool ShouldSerializeMediaStatus() { return !String.IsNullOrEmpty(MediaStatus); }
+            public DateTime FinishDate { get; set; }
 
             /// <summary>
             /// Default constructor.
             /// </summary>
             public Media()
             {
-                MediaFile = String.Empty;
+                MediaFile = null;
                 MediaId = String.Empty;
                 MediaStatus = String.Empty;
+                CreateDate = DateTime.MinValue;
+                StartDate = DateTime.MinValue;
+                FinishDate = DateTime.MinValue;
             }
 
-            /// <summary>
-            /// Converts MediaFile URL string to Uri.
-            /// </summary>
-            /// <returns>An instance of Uri class.</returns>
-            public Uri GetMediaFileUri()
+            System.Xml.Schema.XmlSchema IXmlSerializable.GetSchema()
             {
-                Uri uri = null;
-                Uri.TryCreate(MediaFile, UriKind.Absolute, out uri);
-                return uri;
+                return null;
             }
 
-            /// <summary>
-            /// Sets the MediaFile URL string with specified Uri.
-            /// </summary>
-            /// <param name="newUri">The new Uri to be setted.</param>
-            public void SetMediaFileUri(Uri newUri)
+            public void Parse(XElement root)
             {
-                MediaFile = (newUri == null) ? String.Empty : newUri.AbsoluteUri;
             }
 
-            /// <summary>
-            /// Sets the MediaFile URL string with specified uri string.
-            /// </summary>
-            /// <param name="uriString">The new uri string to be setted.</param>
-            public void SetMediaFileUri(string uriString)
+            void IXmlSerializable.ReadXml(XmlReader reader)
             {
-                if (uriString == null)
-                {
-                    SetMediaFileUri((Uri)null);
-                    return;
-                }
-
-                if (!Uri.IsWellFormedUriString(uriString, UriKind.Absolute))
-                {
-                    uriString = Uri.EscapeUriString(uriString);
-                }
-
-                Uri uri = null;
-                if (Uri.TryCreate(uriString, UriKind.Absolute, out uri))
-                {
-                    SetMediaFileUri(uri);
-                }
             }
 
-            /// <summary>
-            /// Converts CreateDate string representation to DateTime.
-            /// </summary>
-            /// <returns>An instance of DateTime for CreateDate.</returns>
-            public DateTime GetCreateDate()
+            void IXmlSerializable.WriteXml(XmlWriter writer)
             {
-                DateTime d = DateTime.MinValue;
-                if (!String.IsNullOrEmpty(CreateDate))
+                // Writes <mediafile></mediafile>
+                if (MediaFile != null)
                 {
-                    DateTime.TryParse(CreateDate, out d);
+                    writer.WriteSafeElementString("mediafile", MediaFile.AbsoluteUri);
                 }
-                return d;
-            }
 
-            /// <summary>
-            /// Converts StartDate string representation to DateTime.
-            /// </summary>
-            /// <returns>An instance of DateTime for StartDate.</returns>
-            public DateTime GetStartDate()
-            {
-                DateTime d = DateTime.MinValue;
-                if (!String.IsNullOrEmpty(StartDate))
-                {
-                    DateTime.TryParse(StartDate, out d);
-                }
-                return d;
-            }
+                // Writes <mediaid></mediaid>
+                writer.WriteSafeElementString("mediaid", MediaId);
 
-            /// <summary>
-            /// Converts FinishDate string representation to DateTime.
-            /// </summary>
-            /// <returns>An instance of DateTime for FinishDate.</returns>
-            public DateTime GetFinishDate()
-            {
-                DateTime d = DateTime.MinValue;
-                if (!String.IsNullOrEmpty(FinishDate))
-                {
-                    DateTime.TryParse(FinishDate, out d);
-                }
-                return d;
+                // Writes <mediastatus></mediastatus>
+                writer.WriteSafeElementString("mediastatus", MediaStatus);
+
+                // Writes <createdate></createdate>
+                writer.WriteSafeElementString("createdate", 
+                                              !CreateDate.Equals(DateTime.MinValue)
+                                              ? CreateDate.ToString("yyyy-MM-dd HH:mm:ss", 
+                                                CultureInfo.GetCultureInfo("en-US"))
+                                              : "0000-00-00 00:00:00");
+
+                // Writes <startdate></startdate>
+                writer.WriteSafeElementString("startdate",
+                                              !StartDate.Equals(DateTime.MinValue)
+                                              ? StartDate.ToString("yyyy-MM-dd HH:mm:ss", 
+                                                CultureInfo.GetCultureInfo("en-US"))
+                                              : "0000-00-00 00:00:00");
+
+                // Writes <finishdate></finishdate>
+                writer.WriteSafeElementString("finishdate",
+                                              !FinishDate.Equals(DateTime.MinValue)
+                                              ? FinishDate.ToString("yyyy-MM-dd HH:mm:ss", 
+                                                CultureInfo.GetCultureInfo("en-US"))
+                                              : "0000-00-00 00:00:00");
             }
         }
     }

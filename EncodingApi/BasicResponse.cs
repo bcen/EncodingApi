@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.Xml;
 using System.Xml.Linq;
+using System.Linq;
 using EncodingApi.Extensions;
 
 namespace EncodingApi
@@ -19,7 +20,7 @@ namespace EncodingApi
         public string Message { get; set; }
 
         /// <summary>
-        /// List of error.
+        /// List of errors.
         /// </summary>
         public ICollection<string> Errors { get; set; }
 
@@ -32,6 +33,31 @@ namespace EncodingApi
             Errors = new List<string>();
         }
 
+        /// <summary>
+        /// Deserializes the xml from the sepcified XElement into object instance.
+        /// </summary>
+        /// <param name="root">The XElement to parse from.</param>
+        public virtual void Parse(XElement root)
+        {
+            if (root == null) return;
+
+            var elem = root.Element("message");
+            Message = elem != null ? elem.Value : String.Empty;
+
+            elem = root.Element("errors");
+            if (elem != null)
+            {
+                var childs = elem.Elements("error");
+                if (childs != null)
+                {
+                    foreach (var item in childs)
+                    {
+                        Errors.Add(item.Value);
+                    }
+                }
+            }
+        }
+
         public virtual System.Xml.Schema.XmlSchema GetSchema()
         {
             return null;
@@ -39,11 +65,6 @@ namespace EncodingApi
 
         public virtual void ReadXml(XmlReader reader)
         {
-            XElement root = XElement.ReadFrom(reader) as XElement;
-            if (root == null) return;
-
-            var elem = root.Element("message");
-            Message = elem != null ? elem.Value : String.Empty;
         }
 
         public virtual void WriteXml(XmlWriter writer)
