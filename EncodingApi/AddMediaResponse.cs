@@ -27,26 +27,38 @@ namespace EncodingApi
         }
 
         /// <summary>
-        /// Deserializes the xml from the sepcified XElement into object instance.
+        /// Builds this object instance from <c>root</c>.
         /// </summary>
-        /// <param name="root">The XElement to parse from.</param>
-        protected override void Parse(XElement root)
+        /// <remarks>
+        /// When overriden in derived class, call the base.Build(XElement) to ensure that the
+        /// parent class is built properly.
+        /// </remarks>
+        /// <param name="root">The XElement to build from.</param>m>
+        protected override void Build(XElement root)
         {
             if (root == null) return;
 
-            base.Parse(root);
+            base.Build(root);
 
-            // Reads <mediaid>MediaId</mediaid>
+            // Reads <mediaid></mediaid>
             var elem = root.Element("mediaid");
             MediaId = elem != null ? elem.Value : String.Empty;
         }
 
+        /// <summary>
+        /// Reads the XML representation into this object instance.
+        /// </summary>
+        /// <param name='reader'>The XmlReader to read from.</param>
         public override void ReadXml(XmlReader reader)
         {
             XElement root = XElement.ReadFrom(reader) as XElement;
-            Parse(root);
+            Build(root);
         }
 
+        /// <summary>
+        /// Writes this object into XML representation.
+        /// </summary>
+        /// <param name='writer'>The XmlWriter to write to.</param>
         public override void WriteXml(XmlWriter writer)
         {
             base.WriteXml(writer);

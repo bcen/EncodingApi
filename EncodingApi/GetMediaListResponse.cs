@@ -27,12 +27,21 @@ namespace EncodingApi
             MediaList = new List<Media>();
         }
 
-        protected override void Parse(XElement root)
+        /// <summary>
+        /// Builds this object instance from <c>root</c>.
+        /// </summary>
+        /// <remarks>
+        /// When overriden in derived class, call the base.Build(XElement) to ensure that the
+        /// parent class is built properly.
+        /// </remarks>
+        /// <param name="root">The XElement to build from.</param>m>
+        protected override void Build(XElement root)
         {
             if (root == null) return;
 
-            base.Parse(root);
+            base.Build(root);
 
+            // Reads <media>...</media>2
             var elems = root.Elements("media");
             if (elems != null)
             {
@@ -56,12 +65,20 @@ namespace EncodingApi
             }
         }
 
+        /// <summary>
+        /// Reads the XML representation into this object instance.
+        /// </summary>
+        /// <param name='reader'>The XmlReader to read from.</param>
         public override void ReadXml(XmlReader reader)
         {
             XElement root = XElement.ReadFrom(reader) as XElement;
-            Parse(root);
+            Build(root);
         }
 
+        /// <summary>
+        /// Writes this object into XML representation.
+        /// </summary>
+        /// <param name='writer'>The XmlWriter to write to.</param>
         public override void WriteXml(XmlWriter writer)
         {
             base.WriteXml(writer);
@@ -134,6 +151,10 @@ namespace EncodingApi
                 return null;
             }
 
+            /// <summary>
+            /// Reads the XML representation into this object instance.
+            /// </summary>
+            /// <param name='reader'>The XmlReader to read from.</param>
             void IXmlSerializable.ReadXml(XmlReader reader)
             {
                 XElement root = XElement.ReadFrom(reader) as XElement;
@@ -185,6 +206,10 @@ namespace EncodingApi
                 }
             }
 
+            /// <summary>
+            /// Writes this object into XML representation.
+            /// </summary>
+            /// <param name='writer'>The XmlWriter to write to.</param>
             void IXmlSerializable.WriteXml(XmlWriter writer)
             {
                 // Writes <mediafile></mediafile>
