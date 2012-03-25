@@ -36,7 +36,7 @@ namespace EncodingApi
         /// Builds this object instance from <c>root</c>.
         /// </summary>
         /// <remarks>
-        /// When overriden in derived class, call the base.Build(XElement) to ensure that the
+        /// When overriden in derived class, call <c>base.Build(XElement)</c> to ensure that the
         /// parent class is built properly.
         /// </remarks>
         /// <param name="root">The XElement to build from.</param>
@@ -76,6 +76,11 @@ namespace EncodingApi
         /// <summary>
         /// Reads the XML representation into this object instance.
         /// </summary>
+        /// <remarks>
+        /// Implementer of this method must ensure that all base class properties are correctly
+        /// deserialized from its XML, or the derived class should call <c>base.Build(XElement)</c>
+        /// to have the properties build from the XElement.
+        /// </remarks>
         /// <param name='reader'>The XmlReader to read from.</param>
         public abstract void ReadXml(XmlReader reader);
 
@@ -83,7 +88,7 @@ namespace EncodingApi
         /// Writes this object into XML representation.
         /// </summary>
         /// <remarks>
-        /// When overriden in derived class, the base.WriteXml(XmlWriter) to ensure that
+        /// When overriden in derived class, call base.WriteXml(XmlWriter) to ensure that
         /// all properties are correctly written to the writer.
         /// </remarks>
         /// <param name='writer'>The XmlWriter to write to.</param>
@@ -91,7 +96,7 @@ namespace EncodingApi
         {
             // Writes <message></message>
             writer.WriteSafeElementString("message", Message);
-
+            
             if (Errors != null)
             {
                 int count = Errors.Count;
