@@ -88,26 +88,31 @@ namespace EncodingApi
         }
 
         /// <summary>
-        /// Deserializes the xml from <c>reader</c>.
+        /// Reads the XML representation into this object instance.
         /// </summary>
-        /// <param name="reader">The XmlReader.</param>
+        /// <param name='reader'>The XmlReader to read from.</param>
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
             XElement root = XElement.ReadFrom(reader) as XElement;
             if (root == null) return;
 
+            // Reads <userid></userid>
             var elem = root.Element("userid");
             UserId = elem != null ? elem.Value : String.Empty;
 
+            // Reads <userkey></userkey>
             elem = root.Element("userkey");
             UserKey = elem != null ? elem.Value : String.Empty;
 
+            // Reads <action></action>
             elem = root.Element("action");
             Action = elem != null ? elem.Value : String.Empty;
 
+            // Reads <mediaid></mediaid>
             elem = root.Element("mediaid");
             MediaId = elem != null ? elem.Value : String.Empty;
 
+            // Reads <source></source>
             var elemList = root.Elements("source");
             if (elemList != null)
             {
@@ -122,13 +127,16 @@ namespace EncodingApi
                 }
             }
 
+            // Reads <notify></notify>
             elem = root.Element("notify");
             Notify = elem == null ? null : new Uri(elem.Value);
 
+            // Reads <instant></instant>
             elem = root.Element("instant");
             string text = elem != null ? elem.Value : "no";
             IsInstant = text.StartsWith("yes");
 
+            // Reads <format>...</format>
             var s = root.Elements("format");
             if (s != null)
             {
@@ -153,16 +161,24 @@ namespace EncodingApi
         }
 
         /// <summary>
-        /// Serializes the object to xml.
+        /// Writes this object into XML representation.
         /// </summary>
-        /// <param name="writer">The XmlWriter.</param>
+        /// <param name='writer'>The XmlWriter to write to.</param>
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
+            // Writes <userid></userid>
             writer.WriteSafeElementString("userid", UserId);
+
+            // Writes <userkey></userkey>
             writer.WriteSafeElementString("userkey", UserKey);
+
+            // Writes <action></action>
             writer.WriteSafeElementString("action", Action);
+
+            // Writes <mediaid></mediaid>
             writer.WriteSafeElementString("mediaid", MediaId);
 
+            // Writes <source></source>
             if (Sources != null)
             {
                 foreach (Uri uri in Sources)
@@ -171,16 +187,19 @@ namespace EncodingApi
                 }
             }
 
+            // Writes <notify></notify>
             if (Notify != null)
             {
                 writer.WriteSafeElementString("notify", Notify.AbsoluteUri);
             }
 
+            // Writes <instant></instant>
             if (IsInstant)
             {
                 writer.WriteSafeElementString("instant", "yes");
             }
 
+            // Writes <format>...</format
             if (Formats != null)
             {
                 foreach (EncodingFormat f in Formats)
