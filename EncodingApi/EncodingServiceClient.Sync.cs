@@ -126,5 +126,31 @@ namespace EncodingApi
 
             return result.MediaId;
         }
+
+        /// <summary>
+        /// Restarts the media only when there is error.
+        /// </summary>
+        /// <param name="mediaId">The ID of the media to be restarted.</param>
+        /// <exception cref="ArgumentNullException">
+        /// If the mediaId is null or empty string.
+        /// </exception>
+        /// <exception cref="EncodingServiceException">
+        /// If the response contains any error.
+        /// </exception>
+        public void RestartMediaErrors(string mediaId)
+        {
+            if (String.IsNullOrEmpty(mediaId))
+                throw new ArgumentNullException("mediaId cannot be null nor empty string.");
+
+            var q = EncodingQuery.CreateRestartMediaErrorsQuery(mediaId);
+            var result = GetResponse<RestartMediaErrorsResponse>(q);
+            if (result.Errors.Count > 0)
+            {
+                string message = result.Errors.First();
+                EncodingServiceException ex = new EncodingServiceException(message);
+                ex.Data.Add("errors", result.Errors);
+                throw ex;
+            }
+        }
     }
 }

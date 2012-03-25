@@ -78,7 +78,16 @@ namespace EncodingApi
         {
             return new EncodingQuery()
             {
-                Action = EncodingQuery.QueryAction.GetMediaList,
+                Action = EncodingQuery.QueryAction.GetMediaList
+            };
+        }
+
+        public static EncodingQuery CreateRestartMediaErrorsQuery(string mediaId)
+        {
+            return new EncodingQuery()
+            {
+                Action = EncodingQuery.QueryAction.RestartMediaErrors,
+                MediaId = mediaId
             };
         }
 
