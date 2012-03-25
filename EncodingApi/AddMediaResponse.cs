@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Xml.Serialization;
 using System.Xml;
-using EncodingApi.Extensions;
 using System.Xml.Linq;
+using System.Xml.Serialization;
+using EncodingApi.Extensions;
 
 namespace EncodingApi
 {
@@ -29,11 +29,7 @@ namespace EncodingApi
         /// <summary>
         /// Builds this object instance from <c>root</c>.
         /// </summary>
-        /// <remarks>
-        /// When overriden in derived class, call the base.Build(XElement) to ensure that the
-        /// parent class is built properly.
-        /// </remarks>
-        /// <param name="root">The XElement to build from.</param>m>
+        /// <param name="root">The XElement to build from.</param>
         protected override void Build(XElement root)
         {
             if (root == null) return;
