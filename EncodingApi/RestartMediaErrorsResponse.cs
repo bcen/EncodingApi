@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace EncodingApi
 {
     [XmlRoot("response")]
-    public class RestartMediaErrorsResponse : BasicResponse
+    public sealed class RestartMediaErrorsResponse : BasicResponse
     {
         public override void ReadXml(XmlReader reader)
         {

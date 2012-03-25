@@ -55,5 +55,20 @@ namespace EncodingApi
                 errors(response.Errors);
             });
         }
+
+        public void RestartMediaErrorsAsync(string mediaId, Action<string> callback,
+                                            Action<ICollection<string>> errors)
+        {
+            if (String.IsNullOrEmpty(mediaId))
+                throw new ArgumentNullException("mediaId cannot be null nor empty string.");
+
+            var q = EncodingQuery.CreateRestartMediaErrorsQuery(mediaId);
+            GetResponseAsync<RestartMediaErrorsResponse>(q,
+            (response) =>
+            {
+                callback(response.Message);
+                errors(response.Errors);
+            });
+        }
     }
 }
