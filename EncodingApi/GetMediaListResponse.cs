@@ -30,10 +30,6 @@ namespace EncodingApi
         /// <summary>
         /// Builds this object instance from <c>root</c>.
         /// </summary>
-        /// <remarks>
-        /// When overriden in derived class, call the base.Build(XElement) to ensure that the
-        /// parent class is built properly.
-        /// </remarks>
         /// <param name="root">The XElement to build from.</param>m>
         protected override void Build(XElement root)
         {
@@ -41,7 +37,7 @@ namespace EncodingApi
 
             base.Build(root);
 
-            // Reads <media>...</media>2
+            // Reads <media>...</media>
             var elems = root.Elements("media");
             if (elems != null)
             {
