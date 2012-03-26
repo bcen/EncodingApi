@@ -7,6 +7,9 @@ using EncodingApi.Extensions;
 
 namespace EncodingApi
 {
+    /// <summary>
+    /// Encapsulates the encoding query.
+    /// </summary>
     [XmlRoot("query")]
     public class EncodingQuery : IXmlSerializable
     {
@@ -74,6 +77,10 @@ namespace EncodingApi
             Formats = new List<EncodingFormat>();
         }
 
+        /// <summary>
+        /// Creates a GetMediaList query action.
+        /// </summary>
+        /// <returns>The query for GetMediaList.</returns>
         public static EncodingQuery CreateGetMediaListQuery()
         {
             return new EncodingQuery()
@@ -82,6 +89,11 @@ namespace EncodingApi
             };
         }
 
+        /// <summary>
+        /// Creates a RestartMediaErrors with the specified media.
+        /// </summary>
+        /// <param name="mediaId">The ID of the media to be restarted.</param>
+        /// <returns>The query for RestartMediaErrors.</returns>
         public static EncodingQuery CreateRestartMediaErrorsQuery(string mediaId)
         {
             return new EncodingQuery()

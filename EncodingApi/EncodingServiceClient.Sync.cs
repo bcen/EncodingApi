@@ -50,6 +50,12 @@ namespace EncodingApi
             UserKey = ukey;
         }
 
+        /// <summary>
+        /// Gets the response and parse to type <code>T</code>.
+        /// </summary>
+        /// <typeparam name="T">The type to parse to.</typeparam>
+        /// <param name="query">The requested encoding query.</param>
+        /// <returns>An instance of <code>T</code></returns>
         public virtual T GetResponse<T>(EncodingQuery query) where T : class, new()
         {
             if (UserId == null || UserKey == null)

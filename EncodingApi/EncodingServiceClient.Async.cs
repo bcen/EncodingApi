@@ -6,6 +6,10 @@ namespace EncodingApi
 {
     public partial class EncodingServiceClient
     {
+        /// <summary>
+        /// Asynchronous version of <see cref="GetResponse"/>.
+        /// </summary>
+        /// <param name="callback">Callback action for T.</param>
         public virtual void GetResponseAsync<T>(EncodingQuery query, Action<T> callback)
             where T : class, new()
         {
@@ -21,6 +25,11 @@ namespace EncodingApi
             });
         }
 
+        /// <summary>
+        /// Asynchronous version of <see cref="GetMediaList"/>.
+        /// </summary>
+        /// <param name="callback">Callback action for <c>MediaList</c>.</param>
+        /// <param name="errors">Callback action for <c>Errors</c>.</param>
         public void GetMediaListAsync(Action<ICollection<GetMediaListResponse.Media>> callback,
                                       Action<ICollection<string>> errors)
         {
@@ -32,6 +41,11 @@ namespace EncodingApi
             });
         }
 
+        /// <summary>
+        /// Asynchronous version of <see cref="AddMedia"/>.
+        /// </summary>
+        /// <param name="callback">Callback action for the <c>MediaId</c>.</param>
+        /// <param name="errors">Callback action for <c>Errors</c>.</param>
         public void AddMediaAsync(IEnumerable<Uri> sources, IEnumerable<EncodingFormat> formats,
                                   Action<string> callback, Action<ICollection<string>> errors,
                                   bool isInstant=false, Uri notifyUri=null)
@@ -56,6 +70,11 @@ namespace EncodingApi
             });
         }
 
+        /// <summary>
+        /// Asynchronous version of <see cref="RestartMediaErrors"/>.
+        /// </summary>
+        /// <param name="callback">Callback action for <c>Message</c>.</param>
+        /// <param name="errors">Callback action for <c>Errors</c>.</param>
         public void RestartMediaErrorsAsync(string mediaId, Action<string> callback,
                                             Action<ICollection<string>> errors)
         {

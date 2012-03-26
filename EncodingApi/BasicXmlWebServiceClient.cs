@@ -48,7 +48,7 @@ namespace EncodingApi
         }
 
         /// <summary>
-        /// Creates a HttpWebRequest for that used in GetXmlResponse and GetXmlResponseAsync.
+        /// Creates a HttpWebRequest for use in GetXmlResponse and GetXmlResponseAsync.
         /// </summary>
         /// <returns>A HttpWebRequest object.</returns>
         protected virtual HttpWebRequest CreateRequest(Uri host)
@@ -65,7 +65,7 @@ namespace EncodingApi
         }
 
         /// <summary>
-        /// Gets the response in xml string format.
+        /// Gets the xml string response.
         /// </summary>
         /// <param name="xmlRequestString">The xml request string for the parameter: "xml".</param>
         /// <returns>The xml response string.</returns>
