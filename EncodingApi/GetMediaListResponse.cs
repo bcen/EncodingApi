@@ -31,7 +31,7 @@ namespace EncodingApi
         /// Reads XML from <c>root</c> into this object instance.
         /// </summary>
         /// <param name="root">The XElement to read from.</param>
-        protected override void ReadXml(XElement root)
+        public override void ReadXml(XElement root)
         {
             if (root == null) return;
 
@@ -62,16 +62,6 @@ namespace EncodingApi
         }
 
         /// <summary>
-        /// Reads the XML representation into this object instance.
-        /// </summary>
-        /// <param name='reader'>The XmlReader to read from.</param>
-        public override void ReadXml(XmlReader reader)
-        {
-            XElement root = XElement.ReadFrom(reader) as XElement;
-            ReadXml(root);
-        }
-
-        /// <summary>
         /// Writes this object into XML representation.
         /// </summary>
         /// <param name='writer'>The XmlWriter to write to.</param>
@@ -97,7 +87,7 @@ namespace EncodingApi
         /// <summary>
         /// Media meta class.
         /// </summary>
-        public sealed class Media : IXmlSerializable
+        public sealed class Media : XmlSerializableObject
         {
             /// <summary>
             /// The source URL of the media.
@@ -142,18 +132,12 @@ namespace EncodingApi
                 FinishDate = DateTime.MinValue;
             }
 
-            System.Xml.Schema.XmlSchema IXmlSerializable.GetSchema()
-            {
-                return null;
-            }
-
             /// <summary>
             /// Reads the XML representation into this object instance.
             /// </summary>
-            /// <param name='reader'>The XmlReader to read from.</param>
-            void IXmlSerializable.ReadXml(XmlReader reader)
+            /// <param name='reader'>The XElement to read from.</param>
+            public override void ReadXml(XElement root)
             {
-                XElement root = XElement.ReadFrom(reader) as XElement;
                 if (root == null) return;
 
                 // Reads <mediafile></mediafile>
@@ -206,7 +190,7 @@ namespace EncodingApi
             /// Writes this object into XML representation.
             /// </summary>
             /// <param name='writer'>The XmlWriter to write to.</param>
-            void IXmlSerializable.WriteXml(XmlWriter writer)
+            public override void WriteXml(XmlWriter writer)
             {
                 // Writes <mediafile></mediafile>
                 if (MediaFile != null)

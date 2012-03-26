@@ -11,7 +11,7 @@ namespace EncodingApi
     /// Encapsulates the encoding query.
     /// </summary>
     [XmlRoot("query")]
-    public class EncodingQuery : IXmlSerializable
+    public class EncodingQuery : XmlSerializableObject
     {
         /// <summary>
         /// A unique user identifier.
@@ -103,18 +103,12 @@ namespace EncodingApi
             };
         }
 
-        System.Xml.Schema.XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
-
         /// <summary>
         /// Reads the XML representation into this object instance.
         /// </summary>
         /// <param name='reader'>The XmlReader to read from.</param>
-        void IXmlSerializable.ReadXml(XmlReader reader)
+        public override void ReadXml(XElement root)
         {
-            XElement root = XElement.ReadFrom(reader) as XElement;
             if (root == null) return;
 
             // Reads <userid></userid>
@@ -168,15 +162,14 @@ namespace EncodingApi
                 foreach (var item in s)
                 {
                     EncodingFormat f = new EncodingFormat();
-                    if (f is IXmlSerializable)
-                    {
-                        using (XmlReader r = item.CreateReader())
-                        {
-                            r.MoveToContent();
-                            ((IXmlSerializable)f).ReadXml(r);
-                            Formats.Add(f);
-                        }
-                    }
+                    //using (XmlReader r = item.CreateReader())
+                    //{
+                    //    r.MoveToContent();
+                    //    f.ReadXml(r);
+                    //    Formats.Add(f);
+                    //}
+                    f.ReadXml(item);
+                    Formats.Add(f);
                 }
             }
         }
@@ -185,7 +178,7 @@ namespace EncodingApi
         /// Writes this object into XML representation.
         /// </summary>
         /// <param name='writer'>The XmlWriter to write to.</param>
-        void IXmlSerializable.WriteXml(XmlWriter writer)
+        public override void WriteXml(XmlWriter writer)
         {
             // Writes <userid></userid>
             writer.WriteSafeElementString("userid", UserId);
@@ -225,12 +218,9 @@ namespace EncodingApi
             {
                 foreach (EncodingFormat f in Formats)
                 {
-                    if (f is IXmlSerializable)
-                    {
-                        writer.WriteStartElement("format");
-                        ((IXmlSerializable)f).WriteXml(writer);
-                        writer.WriteEndElement();
-                    }
+                    writer.WriteStartElement("format");
+                    f.WriteXml(writer);
+                    writer.WriteEndElement();
                 }
             }
         }

@@ -50,7 +50,7 @@
     <Compile Include="EncodingServiceException.cs" />
     <Compile Include="GetMediaListResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RestartMediaErrorsResponse.cs" />
+    <Compile Include="XmlSerializableObject.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -82,7 +82,7 @@ namespace EncodingApi
                 throw new ArgumentNullException("mediaId cannot be null nor empty string.");
 
             var q = EncodingQuery.CreateRestartMediaErrorsQuery(mediaId);
-            GetResponseAsync<RestartMediaErrorsResponse>(q,
+            GetResponseAsync<BasicResponse>(q,
             (response) =>
             {
                 callback(response.Message);

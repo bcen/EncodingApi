@@ -149,7 +149,7 @@ namespace EncodingApi
                 throw new ArgumentNullException("mediaId cannot be null nor empty string.");
 
             var q = EncodingQuery.CreateRestartMediaErrorsQuery(mediaId);
-            var result = GetResponse<RestartMediaErrorsResponse>(q);
+            var result = GetResponse<BasicResponse>(q);
             if (result.Errors.Count > 0)
             {
                 string message = result.Errors.First();

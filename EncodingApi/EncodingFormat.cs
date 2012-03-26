@@ -6,7 +6,8 @@ using EncodingApi.Extensions;
 
 namespace EncodingApi
 {
-    public class EncodingFormat : IXmlSerializable
+    [XmlRoot("format")]
+    public class EncodingFormat : XmlSerializableObject
     {
         /// <summary>
         /// Determines the level of noise filtering to apply in the preprocessor.
@@ -81,14 +82,8 @@ namespace EncodingApi
             AudioSampleRate = 0;
         }
 
-        System.Xml.Schema.XmlSchema IXmlSerializable.GetSchema()
+        public override void ReadXml(XElement root)
         {
-            return null;
-        }
-
-        void IXmlSerializable.ReadXml(XmlReader reader)
-        {
-            XElement root = XElement.ReadFrom(reader) as XElement;
             if (root == null) return;
 
             var elem = root.Element("noise_reduction");
@@ -131,7 +126,7 @@ namespace EncodingApi
             }
         }
 
-        void IXmlSerializable.WriteXml(XmlWriter writer)
+        public override void WriteXml(XmlWriter writer)
         {
             if (NoiseReduction >= 0)
             {

@@ -30,7 +30,7 @@ namespace EncodingApi
         /// Reads XML from <c>root</c> into this object instance.
         /// </summary>
         /// <param name="root">The XElement to read from.</param>
-        protected override void ReadXml(XElement root)
+        public override void ReadXml(XElement root)
         {
             if (root == null) return;
 
@@ -39,16 +39,6 @@ namespace EncodingApi
             // Reads <mediaid></mediaid>
             var elem = root.Element("mediaid");
             MediaId = elem != null ? elem.Value : String.Empty;
-        }
-
-        /// <summary>
-        /// Reads the XML representation into this object instance.
-        /// </summary>
-        /// <param name='reader'>The XmlReader to read from.</param>
-        public override void ReadXml(XmlReader reader)
-        {
-            XElement root = XElement.ReadFrom(reader) as XElement;
-            ReadXml(root);
         }
 
         /// <summary>

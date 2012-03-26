@@ -8,10 +8,10 @@ using EncodingApi.Extensions;
 namespace EncodingApi
 {
     /// <summary>
-    /// Base class for all response class.
+    /// Basic response class.
     /// </summary>
     [XmlRoot("response")]
-    public abstract class BasicResponse : IXmlSerializable
+    public class BasicResponse : XmlSerializableObject
     {
         /// <summary>
         /// Message from response.
@@ -40,7 +40,7 @@ namespace EncodingApi
         /// parent class is read properly.
         /// </remarks>
         /// <param name="root">The XElement to read from.</param>
-        protected virtual void ReadXml(XElement root)
+        public override void ReadXml(XElement root)
         {
             if (root == null) return;
 
@@ -68,22 +68,6 @@ namespace EncodingApi
             }
         }
 
-        public virtual System.Xml.Schema.XmlSchema GetSchema()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Reads the XML representation into this object instance.
-        /// </summary>
-        /// <remarks>
-        /// Implementer of this method must ensure that all base class properties are correctly
-        /// deserialized from its XML, or the derived class should call <c>base.Read(XElement)</c>
-        /// to have the properties read from the XElement.
-        /// </remarks>
-        /// <param name='reader'>The XmlReader to read from.</param>
-        public abstract void ReadXml(XmlReader reader);
-
         /// <summary>
         /// Writes this object into XML representation.
         /// </summary>
@@ -92,7 +76,7 @@ namespace EncodingApi
         /// all properties are correctly written to the writer.
         /// </remarks>
         /// <param name='writer'>The XmlWriter to write to.</param>
-        public virtual void WriteXml(XmlWriter writer)
+        public override void WriteXml(XmlWriter writer)
         {
             // Writes <message></message>
             writer.WriteSafeElementString("message", Message);
