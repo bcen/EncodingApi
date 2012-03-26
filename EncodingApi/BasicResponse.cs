@@ -33,14 +33,14 @@ namespace EncodingApi
         }
 
         /// <summary>
-        /// Builds this object instance from <c>root</c>.
+        /// Reads XML from <c>root</c> into this object instance.
         /// </summary>
         /// <remarks>
-        /// When overriden in derived class, call <c>base.Build(XElement)</c> to ensure that the
-        /// parent class is built properly.
+        /// When overriden in derived class, call <c>base.ReadXml(XElement)</c> to ensure that the
+        /// parent class is read properly.
         /// </remarks>
-        /// <param name="root">The XElement to build from.</param>
-        protected virtual void Build(XElement root)
+        /// <param name="root">The XElement to read from.</param>
+        protected virtual void ReadXml(XElement root)
         {
             if (root == null) return;
 
@@ -78,8 +78,8 @@ namespace EncodingApi
         /// </summary>
         /// <remarks>
         /// Implementer of this method must ensure that all base class properties are correctly
-        /// deserialized from its XML, or the derived class should call <c>base.Build(XElement)</c>
-        /// to have the properties build from the XElement.
+        /// deserialized from its XML, or the derived class should call <c>base.Read(XElement)</c>
+        /// to have the properties read from the XElement.
         /// </remarks>
         /// <param name='reader'>The XmlReader to read from.</param>
         public abstract void ReadXml(XmlReader reader);

@@ -11,13 +11,13 @@ namespace EncodingApi
     public sealed class RestartMediaErrorsResponse : BasicResponse
     {
         /// <summary>
-        /// Reads the XML representation into this object instance.
+        /// Reads XML from <c>root</c> into this object instance.
         /// </summary>
-        /// <param name='reader'>The XmlReader to read from.</param>
+        /// <param name="root">The XElement to read from.</param>
         public override void ReadXml(XmlReader reader)
         {
             XElement root = XElement.ReadFrom(reader) as XElement;
-            base.Build(root);
+            base.ReadXml(root);
         }
     }
 }

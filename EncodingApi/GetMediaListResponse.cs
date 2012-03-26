@@ -28,14 +28,14 @@ namespace EncodingApi
         }
 
         /// <summary>
-        /// Builds this object instance from <c>root</c>.
+        /// Reads XML from <c>root</c> into this object instance.
         /// </summary>
-        /// <param name="root">The XElement to build from.</param>m>
-        protected override void Build(XElement root)
+        /// <param name="root">The XElement to read from.</param>
+        protected override void ReadXml(XElement root)
         {
             if (root == null) return;
 
-            base.Build(root);
+            base.ReadXml(root);
 
             // Reads <media>...</media>
             var elems = root.Elements("media");
@@ -68,7 +68,7 @@ namespace EncodingApi
         public override void ReadXml(XmlReader reader)
         {
             XElement root = XElement.ReadFrom(reader) as XElement;
-            Build(root);
+            ReadXml(root);
         }
 
         /// <summary>
