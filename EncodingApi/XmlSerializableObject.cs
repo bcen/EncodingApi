@@ -6,12 +6,14 @@ using System.Xml.Serialization;
 namespace EncodingApi
 {
     /// <summary>
-    /// Represents object that is serializable to, and deserializable from XML.
+    /// Represents object that is XML serializable/deserializable.
     /// <remarks>
     /// This abstract class implements the IXmlSerializable interface and provides
-    /// one addition method: ReadXml(XElement). The default implementation of
-    /// ReadXml(XmlReader) is create a XElement from the XML reader and pass it off to
-    /// ReadXml(XElement).
+    /// one addition method: ReadXml(XElement),
+    /// ReadXml(XElement) provides a better way to use Linq to query XML data in memory instead of
+    /// forward-only <c>XmlReader</c>.
+    /// The default implementation of ReadXml(XmlReader) is to create a <c>XElement</c> and pass it
+    /// to ReadXml(XElement).
     /// </remarks>
     /// </summary>
     public abstract class XmlSerializableObject : IXmlSerializable

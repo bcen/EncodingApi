@@ -162,12 +162,6 @@ namespace EncodingApi
                 foreach (var item in s)
                 {
                     EncodingFormat f = new EncodingFormat();
-                    //using (XmlReader r = item.CreateReader())
-                    //{
-                    //    r.MoveToContent();
-                    //    f.ReadXml(r);
-                    //    Formats.Add(f);
-                    //}
                     f.ReadXml(item);
                     Formats.Add(f);
                 }

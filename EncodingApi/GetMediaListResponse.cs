@@ -48,15 +48,8 @@ namespace EncodingApi
                 foreach (var item in elems)
                 {
                     Media m = new Media();
-                    if (m is IXmlSerializable)
-                    {
-                        using (XmlReader r = item.CreateReader())
-                        {
-                            r.MoveToContent();
-                            ((IXmlSerializable)m).ReadXml(r);
-                            MediaList.Add(m);
-                        }
-                    }
+                    m.ReadXml(item);
+                    MediaList.Add(m);
                 }
             }
         }
@@ -74,12 +67,9 @@ namespace EncodingApi
             {
                 foreach (var m in MediaList)
                 {
-                    if (m is IXmlSerializable)
-                    {
-                        writer.WriteStartElement("media");
-                        ((IXmlSerializable)m).WriteXml(writer);
-                        writer.WriteEndElement();
-                    }
+                    writer.WriteStartElement("media");
+                    m.WriteXml(writer);
+                    writer.WriteEndElement();
                 }
             }
         }
