@@ -75,7 +75,30 @@ namespace EncodingApi
         /// </summary>
         public FadingEffectTimeParameters FadeIn { get; set; }
 
+        /// <summary>
+        /// The specified fade out time parameters of the output.
+        /// </summary>
         public FadingEffectTimeParameters FadeOut { get; set; }
+
+        /// <summary>
+        /// Left crop band size (in pixels), must be an even integer.
+        /// </summary>
+        public int CropLeft { get; set; }
+
+        /// <summary>
+        /// Right crop band size (in pixels), must be an even integer.
+        /// </summary>
+        public int CropRight { get; set; }
+
+        /// <summary>
+        /// Top crop band size (in pixels), must be an even integer.
+        /// </summary>
+        public int CropTop { get; set; }
+
+        /// <summary>
+        /// Bottom crop band size (in pixels), must be an even integer.
+        /// </summary>
+        public int CropBottom { get; set; }
 
         /// <summary>
         /// Default constructor.
@@ -102,6 +125,10 @@ namespace EncodingApi
             VideoFrameSize = null;
             FadeIn = null;
             FadeOut = null;
+            CropLeft = -1;
+            CropRight = -1;
+            CropTop = -1;
+            CropBottom = -1;
         }
 
         public override void ReadXml(XElement root)
@@ -197,6 +224,38 @@ namespace EncodingApi
                     FadeOut = new FadingEffectTimeParameters(s, d);
                 }
             }
+
+            // Reads <crop_left></crop_left>
+            elem = root.Element("crop_left");
+            if (elem != null)
+            {
+                int cl;
+                CropLeft = Int32.TryParse(elem.Value, out cl) ? cl : -1;
+            }
+
+            // Reads <crop_right></crop_right>
+            elem = root.Element("crop_right");
+            if (elem != null)
+            {
+                int cr;
+                CropRight = Int32.TryParse(elem.Value, out cr) ? cr : -1;
+            }
+
+            // Reads <crop_top></crop_top>
+            elem = root.Element("crop_top");
+            if (elem != null)
+            {
+                int ct;
+                CropTop = Int32.TryParse(elem.Value, out ct) ? ct : -1;
+            }
+
+            // Reads <crop_bottom></crop_bottom>
+            elem = root.Element("crop_bottom");
+            if (elem != null)
+            {
+                int cb;
+                CropBottom = Int32.TryParse(elem.Value, out cb) ? cb : -1;
+            }
         }
 
         public override void WriteXml(XmlWriter writer)
@@ -260,6 +319,30 @@ namespace EncodingApi
             {
                 writer.WriteSafeElementString("fade_out",
                     String.Format("{0}:{1}", FadeOut.StartTime, FadeOut.Duration));
+            }
+
+            // Writes <crop_left></crop_left>
+            if (CropLeft % 2 == 0)
+            {
+                writer.WriteSafeElementString("crop_left", String.Format("{0}", CropLeft));
+            }
+
+            // Writes <crop_right></crop_right>
+            if (CropRight % 2 == 0)
+            {
+                writer.WriteSafeElementString("crop_right", String.Format("{0}", CropRight));
+            }
+
+            // Writes <crop_top></crop_top>
+            if (CropTop % 2 == 0)
+            {
+                writer.WriteSafeElementString("crop_top", String.Format("{0}", CropTop));
+            }
+
+            // Writes <crop_bottom></crop_bottom>
+            if (CropBottom % 2 == 0)
+            {
+                writer.WriteSafeElementString("crop_bottom", String.Format("{0}", CropBottom));
             }
         }
     }
