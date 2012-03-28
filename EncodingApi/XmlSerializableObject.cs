@@ -8,12 +8,12 @@ namespace EncodingApi
     /// <summary>
     /// Represents object that is XML serializable/deserializable.
     /// <remarks>
-    /// This abstract class implements the IXmlSerializable interface and provides
-    /// one addition method: ReadXml(XElement),
-    /// ReadXml(XElement) provides a better way to use Linq to query XML data in memory instead of
-    /// forward-only <c>XmlReader</c>.
-    /// The default implementation of ReadXml(XmlReader) is to create a <c>XElement</c> and pass it
-    /// to ReadXml(XElement).
+    /// This abstract class implements the IXmlSerializable interface and has
+    /// one addition method: ReadXml(XElement).
+    /// Subclass should use ReadXml(XElement) instead of ReadXml(XmlReader), since 
+    /// XElement provides easier access with Linq to XML than the forward-only XML reader.
+    /// By default, ReadXml(XmlReader) method will create a XElement from the reader
+    /// and pass it to ReadXml(XElement).
     /// </remarks>
     /// </summary>
     public abstract class XmlSerializableObject : IXmlSerializable
@@ -41,7 +41,7 @@ namespace EncodingApi
         /// deserialized from its XML, or the derived class should call <c>base.Read(XElement)</c>
         /// to have the properties read from the XElement.
         /// </remarks>
-        /// <param name='reader'>The XmlReader to read from.</param>
+        /// <param name='reader'>The XElement to read from.</param>
         public abstract void ReadXml(XElement root);
 
         /// <summary>
