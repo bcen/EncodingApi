@@ -11,16 +11,17 @@ namespace EncodingApi
     {
         /// <summary>
         /// Determines the level of noise filtering to apply in the preprocessor.
-        /// 0 is no preprocessing, 6 is extreme preprocessing.
+        /// 0 is no preprocessing, 6 is extreme preprocessing, any negative integer indicates
+        /// NoiseReduction is not specified.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException">When value is larger than 6.</exception>
         public int NoiseReduction
         {
             get { return _noiseReduction; }
             set
             {
                 if (value > 6)
-                    throw new ArgumentOutOfRangeException("NoiseReduction must be less than or equal to 6.");
+                    throw new ArgumentOutOfRangeException("value must be less than or equal to 6.");
                 _noiseReduction = value;
             }
         }
@@ -43,7 +44,7 @@ namespace EncodingApi
 
         /// <summary>
         /// The video bitrate of the output in kilo/second.
-        /// Nkb/s, where N is any non-zero integer.
+        /// Nkb/s, where N is any non-zero integer. Zero indicates VideoBitrate is not specified.
         /// </summary>
         public int VideoBitrate { get; set; }
 
@@ -55,20 +56,31 @@ namespace EncodingApi
 
         /// <summary>
         /// The audio sample rate of the output in Hz.
-        /// NHz, where N is any non-zero integer.
+        /// NHz, where N is any non-zero integer. 0 indicates AudioSampleRate is not specified.
         /// </summary>
         public int AudioSampleRate { get; set; }
 
         /// <summary>
         /// Audio volume of the output. Any non-negative value, negative integer indicates
-        /// audio volume will be default from input source.
+        /// audio volume will be default from input source. -1 indicates AudioVolume is not
+        /// specified.
         /// </summary>
-        public int AudioVolume { get; set; }
+        public int AudioVolume
+        {
+            get { return _audioVolume; }
+            set
+            {
+                if (value > 100)
+                    throw new ArgumentOutOfRangeException("value cannot be over 100");
+                _audioVolume = value;
+            }
+        }
+        private int _audioVolume;
 
         /// <summary>
         /// The video frame size of the output. All dimensions must be even integer.
         /// </summary>
-        public Dimension VideoFrameSize { get; set; }
+        public VideoDimension VideoFrameSize { get; set; }
 
         /// <summary>
         /// The specified fade in time parameters of the output.
@@ -81,24 +93,73 @@ namespace EncodingApi
         public FadingEffectTimeParameters FadeOut { get; set; }
 
         /// <summary>
-        /// Left crop band size (in pixels), must be an even integer.
+        /// Left crop band size (in pixels), must be an even integer. -1 indicates no
+        /// CropLeft is specified.
         /// </summary>
-        public int CropLeft { get; set; }
+        public int CropLeft
+        {
+            get { return _cropLeft; }
+            set
+            {
+                if (value > 0 && value % 2 != 0)
+                    throw new ArgumentOutOfRangeException("value must be even non negative integer.");
+                _cropLeft = value;
+            }
+        }
+        private int _cropLeft;
 
         /// <summary>
-        /// Right crop band size (in pixels), must be an even integer.
+        /// Right crop band size (in pixels), must be an even integer. -1 indicates no
+        /// CropRight is specified.
         /// </summary>
-        public int CropRight { get; set; }
+        public int CropRight
+        {
+            get { return _cropRight; }
+            set
+            {
+                if (value > 0 && value % 2 != 0)
+                    throw new ArgumentOutOfRangeException("value must be even non negative integer.");
+                _cropRight = value;
+            }
+        }
+        private int _cropRight;
 
         /// <summary>
-        /// Top crop band size (in pixels), must be an even integer.
+        /// Top crop band size (in pixels), must be an even integer. -1 indicates no
+        /// CropTop is specified.
         /// </summary>
-        public int CropTop { get; set; }
+        public int CropTop
+        {
+            get { return _cropTop; }
+            set
+            {
+                if (value > 0 && value % 2 != 0)
+                    throw new ArgumentOutOfRangeException("value must be even non negative integer.");
+                _cropTop = value;
+            }
+        }
+        private int _cropTop;
 
         /// <summary>
-        /// Bottom crop band size (in pixels), must be an even integer.
+        /// Bottom crop band size (in pixels), must be an even integer. -1 indicates no
+        /// CropBottom is specified.
         /// </summary>
-        public int CropBottom { get; set; }
+        public int CropBottom
+        {
+            get { return _cropBottom; }
+            set
+            {
+                if (value > 0 && value % 2 != 0)
+                    throw new ArgumentOutOfRangeException("value must be even non negative integer.");
+                _cropBottom = value;
+            }
+        }
+        private int _cropBottom;
+
+        /// <summary>
+        /// Whether to keep aspect ratio or not.
+        /// </summary>
+        public bool KeepAspectRatio { get; set; }
 
         /// <summary>
         /// Default constructor.
@@ -129,6 +190,7 @@ namespace EncodingApi
             CropRight = -1;
             CropTop = -1;
             CropBottom = -1;
+            KeepAspectRatio = true;
         }
 
         public override void ReadXml(XElement root)
@@ -169,10 +231,13 @@ namespace EncodingApi
             if (elem != null)
             {
                 string [] tokens = elem.Value.Split('k', 'K');
-                double tmp;
-                AudioBitrate = Double.TryParse(tokens[0], out tmp) ? tmp : 0D;
+                if (tokens.Length >= 1)
+                {
+                    double tmp;
+                    AudioBitrate = Double.TryParse(tokens[0], out tmp) ? tmp : 0D;
+                }
             }
-
+            
             // Reads <audio_sample_rate></audio_sample_rate>
             elem = root.Element("audio_sample_rate");
             if (elem != null)
@@ -194,10 +259,13 @@ namespace EncodingApi
             if (elem != null)
             {
                 string[] tokens = elem.Value.Split('x', 'X');
-                int w, h;
-                if (Int32.TryParse(tokens[0], out w) && Int32.TryParse(tokens[1], out h))
+                if (tokens.Length == 2)
                 {
-                    VideoFrameSize = new Dimension(w, h);
+                    int w, h;
+                    if (Int32.TryParse(tokens[0], out w) && Int32.TryParse(tokens[1], out h))
+                    {
+                        VideoFrameSize = new VideoDimension(w, h);
+                    }
                 }
             }
 
@@ -206,10 +274,13 @@ namespace EncodingApi
             if (elem != null)
             {
                 string[] tokens = elem.Value.Split(':');
-                double s, d;
-                if (Double.TryParse(tokens[0], out s) && Double.TryParse(tokens[1], out d))
+                if (tokens.Length == 2)
                 {
-                    FadeIn = new FadingEffectTimeParameters(s, d);
+                    double s, d;
+                    if (Double.TryParse(tokens[0], out s) && Double.TryParse(tokens[1], out d))
+                    {
+                        FadeIn = new FadingEffectTimeParameters(s, d);
+                    }
                 }
             }
 
@@ -218,10 +289,13 @@ namespace EncodingApi
             if (elem != null)
             {
                 string[] tokens = elem.Value.Split(':');
-                double s, d;
-                if (Double.TryParse(tokens[0], out s) && Double.TryParse(tokens[1], out d))
+                if (tokens.Length == 2)
                 {
-                    FadeOut = new FadingEffectTimeParameters(s, d);
+                    double s, d;
+                    if (Double.TryParse(tokens[0], out s) && Double.TryParse(tokens[1], out d))
+                    {
+                        FadeOut = new FadingEffectTimeParameters(s, d);
+                    }
                 }
             }
 
@@ -255,6 +329,13 @@ namespace EncodingApi
             {
                 int cb;
                 CropBottom = Int32.TryParse(elem.Value, out cb) ? cb : -1;
+            }
+
+            // Reads <keep_aspect_ratio></keep_aspect_ratio>
+            elem = root.Element("keep_aspect_ratio");
+            if (elem != null)
+            {
+                KeepAspectRatio = !elem.Value.StartsWith("no");
             }
         }
 
@@ -344,19 +425,25 @@ namespace EncodingApi
             {
                 writer.WriteSafeElementString("crop_bottom", String.Format("{0}", CropBottom));
             }
+
+            // Writes <keep_aspect_ratio></keep_aspect_ratio>
+            if (!KeepAspectRatio)
+            {
+                writer.WriteSafeElementString("keep_aspect_ratio", "no");
+            }
         }
     }
 
-    public class Dimension
+    public class VideoDimension
     {
         public int Width { get; set; }
         public int Height { get; set; }
 
-        public Dimension()
+        public VideoDimension()
         {
         }
 
-        public Dimension(int width, int height)
+        public VideoDimension(int width, int height)
         {
             Width = width;
             Height = height;

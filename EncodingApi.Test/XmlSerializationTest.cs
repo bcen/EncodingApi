@@ -12,6 +12,22 @@ namespace EncodingApi.Test
     public class XmlSerializationTest
     {
         [Fact]
+        public void ShouldThrowException()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                EncodingFormat f = new EncodingFormat();
+                f.NoiseReduction = 7;
+            });
+
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                EncodingFormat f = new EncodingFormat();
+                f.CropBottom = 3;
+            });
+        }
+
+        [Fact]
         public void TestSerialization()
         {
             // EncodingQuery
@@ -41,7 +57,15 @@ namespace EncodingApi.Test
                     },
                     new EncodingFormat()
                     {
-                        Output = "mp3"
+                        Output = "mp3",
+                        AudioVolume = 84,
+                        VideoFrameSize = new VideoDimension(840, 640),
+                        FadeIn = new FadingEffectTimeParameters(0D, 3.5D),
+                        CropLeft = 4,
+                        CropRight = 6,
+                        CropTop = 8,
+                        CropBottom = 10,
+                        KeepAspectRatio = false
                     }
                 }
             };
@@ -66,6 +90,14 @@ namespace EncodingApi.Test
                 </format>
                 <format>
                     <output>mp3</output>
+                    <audio_volume>84</audio_volume>
+                    <size>840x640</size>
+                    <fade_in>0:3.5</fade_in>
+                    <crop_left>4</crop_left>
+                    <crop_right>6</crop_right>
+                    <crop_top>8</crop_top>
+                    <crop_bottom>10</crop_bottom>
+                    <keep_aspect_ratio>no</keep_aspect_ratio>
                 </format>
             </query>";
             string actualXml = Serialize(q, "    ");
@@ -158,6 +190,14 @@ namespace EncodingApi.Test
                 </format>
                 <format>
                     <output>mp3</output>
+                    <audio_volume>84</audio_volume>
+                    <size>840x640</size>
+                    <fade_in>0:3.5</fade_in>
+                    <crop_left>4</crop_left>
+                    <crop_right>6</crop_right>
+                    <crop_top>8</crop_top>
+                    <crop_bottom>10</crop_bottom>
+                    <keep_aspect_ratio>no</keep_aspect_ratio>
                 </format>
             </query>";
 
@@ -185,6 +225,16 @@ namespace EncodingApi.Test
 
             Assert.NotNull(f2);
             Assert.Equal("mp3", f2.Output);
+            Assert.Equal(84, f2.AudioVolume);
+            Assert.Equal(840, f2.VideoFrameSize.Width);
+            Assert.Equal(640, f2.VideoFrameSize.Height);
+            Assert.Equal(0D, f2.FadeIn.StartTime);
+            Assert.Equal(3.5D, f2.FadeIn.Duration);
+            Assert.Equal(4, f2.CropLeft);
+            Assert.Equal(6, f2.CropRight);
+            Assert.Equal(8, f2.CropTop);
+            Assert.Equal(10, f2.CropBottom);
+            Assert.False(f2.KeepAspectRatio);
 
             // AddMediaResponse
             xml =
