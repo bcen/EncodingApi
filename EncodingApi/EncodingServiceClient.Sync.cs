@@ -56,7 +56,7 @@ namespace EncodingApi
         /// <typeparam name="T">The type to parse to.</typeparam>
         /// <param name="query">The requested encoding query.</param>
         /// <returns>An instance of <code>T</code></returns>
-        public virtual T GetResponse<T>(EncodingQuery query) where T : class, new()
+        public virtual T GetResponse<T>(EncodingQuery query) where T : BasicResponse, new()
         {
             if (UserId == null || UserKey == null)
                 throw new EncodingServiceException("UserId or UserKey is empty");

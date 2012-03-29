@@ -11,7 +11,7 @@ namespace EncodingApi
         /// </summary>
         /// <param name="callback">Callback action for T.</param>
         public virtual void GetResponseAsync<T>(EncodingQuery query, Action<T> callback)
-            where T : class, new()
+            where T : BasicResponse, new()
         {
             if (UserId == null || UserKey == null)
                 throw new EncodingServiceException("UserId or UserKey is empty");
