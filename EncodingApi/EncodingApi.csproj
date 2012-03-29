@@ -49,6 +49,7 @@
     <Compile Include="Extensions\XmlWriterExtensions.cs" />
     <Compile Include="EncodingServiceException.cs" />
     <Compile Include="GetMediaListResponse.cs" />
+    <Compile Include="GetStatusResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlSerializableObject.cs" />
   </ItemGroup>
